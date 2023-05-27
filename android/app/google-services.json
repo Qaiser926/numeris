@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "420806721838",
+    "project_id": "numeris-80dda",
+    "storage_bucket": "numeris-80dda.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420806721838:android:59fabcde3a568a13e37abf",
+        "android_client_info": {
+          "package_name": "com.example.numeris"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "420806721838-8jeq7adoedv3b5iv71st6b1cam5go6l9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxTtogsyij2zjrEHGfHd3hA4N5tno0NJY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "420806721838-8jeq7adoedv3b5iv71st6b1cam5go6l9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
