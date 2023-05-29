@@ -145,7 +145,7 @@ class MissingState extends State<Missing> {
         context: context,
         builder: (context) {
           return ResultMessage(
-            message: 'Time out!',
+            message: 'Time_out!',
             onTap: i==5 ?  navigate : goToNextQuestion,
             icon: Icons.arrow_forward,
           );

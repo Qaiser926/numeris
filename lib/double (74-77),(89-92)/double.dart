@@ -206,7 +206,7 @@ class DoubleAdditionSubtractionState extends State<DoubleAdditionSubtraction> {
         context: context,
         builder: (context) {
           return ResultMessage(
-            message: 'Time out!',
+            message: 'Time_out!',
             onTap: goToNextQuestionAddition,
             icon: Icons.arrow_forward,
           );
@@ -227,9 +227,6 @@ class DoubleAdditionSubtractionState extends State<DoubleAdditionSubtraction> {
             icon: Icons.arrow_forward,
           );
         });
-
-
-
   }
 
   void checkResultSubtract1() {
@@ -239,7 +236,7 @@ class DoubleAdditionSubtractionState extends State<DoubleAdditionSubtraction> {
         context: context,
         builder: (context) {
           return ResultMessage(
-            message: widget.num==27 && i==3? 'Test_Completed'.tr:'Time out!'.tr,
+            message: widget.num==27 && i==3? 'Test_Completed'.tr:'Time_out!'.tr,
             onTap: i==3 ? navigate : goToNextQuestionSubtract,
             icon: Icons.arrow_forward,
           );
@@ -910,7 +907,5 @@ class ButtonAnswer extends StatelessWidget {
         }
     );}
 }
-
-
 
 

@@ -335,7 +335,7 @@ class Circles1State extends State<Circles1> {
                                         Expanded(
                                           flex: 5,
                                           child: Text(
-                                            "How_many_circles_do_you_see?".tr ,
+                                            "How_many_circles_do_you_see".tr ,
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontSize:

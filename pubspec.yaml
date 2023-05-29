@@ -47,7 +47,9 @@ dependencies:
   fluttertoast: ^8.0.9
   share_plus: ^6.3.1
   get: ^4.6.5
-
+  flutter_tts: ^3.6.3
+  get_storage: ^2.1.1
+  shared_preferences: ^2.1.1
 
 
 

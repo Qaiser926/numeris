@@ -47,7 +47,8 @@ class HalfDoubleState extends State<HalfDouble> {
   String answer = '';
   Color _containerColor = ColorManager.button;
   bool check = true;
-
+  String value_double_of="What_is_the_double_of ".tr;
+  String value_half_of="What_is_the_half_of".tr;
   int targetIndex = 0;
   Color targetColor = ColorManager.offWhite;
   Timer? _timer;
@@ -480,7 +481,7 @@ class HalfDoubleState extends State<HalfDouble> {
 
                                           Expanded(
                                             child: Text(
-                                              i<=5 ?  "What is the double of $numberA?":  "What is the half of $numberA?" ,
+                                              i<=5 ?  "$value_double_of $numberA?":  "$value_half_of $numberA?" ,
                                               textAlign: TextAlign.center,
                                               style:GoogleFonts.montserrat(textStyle: TextStyle(
                                                 fontSize:  MediaQuery

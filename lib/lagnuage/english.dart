@@ -57,5 +57,10 @@
   "Practise":"Practise",
   "Child_Selected":"Child Selected",
   "Enter_Name":"Enter Name",
-  "":"",
+  "What_is_the_double_of":"What is the double of",
+  "What_is_the_half_of":"What is the half of",
+  "ask_you_parents_or_your_teacher_to_checkk_the_website":"Ask you parents or your teacher to check the website for an explanation of how these exercises can be done. As Numeris grows, we will add interactive exercises to help you practice.",
+  "diagnostic":"diagnostisch",
+  "Start":"Start",
+  "Start_diagnostic":"Start \ndiagnostic"
 };

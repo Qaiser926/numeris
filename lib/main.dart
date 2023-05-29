@@ -1,54 +1,27 @@
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:numeris/Dice(21,36,46)/Dice.dart';
-import 'package:numeris/HalfDouble(60-73)/HalfDouble.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:numeris/WelcomeUI.dart';
-import 'package:numeris/authenticate/login.dart';
-import 'package:numeris/authenticate/signup.dart';
-import 'package:numeris/cards/19.dart';
-import 'package:numeris/cards/20.dart';
-import 'package:numeris/circle(1-2,%2028-35)/circles1.dart';
-import 'package:numeris/count/44.dart';
-import 'package:numeris/count/45.dart';
-import 'package:numeris/count/Q15.dart';
-import 'package:numeris/count/Q3.dart';
-import 'package:numeris/count/Q5.dart';
-import 'package:numeris/count/Q6.dart';
-import 'package:numeris/double%20(74-77),(89-92)/double.dart';
-import 'package:numeris/points(37-42)/points.dart';
-import 'package:numeris/report/report.dart';
-import 'package:numeris/single%20addition(52-55,78-82)/Addition.dart';
-import 'package:numeris/single%20question(7-14),(22-27),(47-51)/beforeafter(7-14).dart';
-import 'package:numeris/single%20question(7-14),(22-27),(47-51)/missing(22-27).dart';
-import 'package:numeris/single%20question(7-14),(22-27),(47-51)/plusMinus(47-51).dart';
-import 'package:numeris/splash/splash.dart';
 
-import 'package:numeris/subtraction(56-59,83-88)/Subtract.dart';
+import 'package:numeris/lagnuage/languageChange/langChanger.dart';
 
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_core/firebase_core.dart';
 
-import 'Test/test.dart';
-import 'Test/test2.dart';
-import 'circle(1-2, 28-35)/circles.dart';
-import 'count/43.dart';
-import 'count/Q16.dart';
-import 'count/Q17.dart';
-import 'count/Q18.dart';
-import 'count/Q4.dart';
 
 
 
 Future<void> main()  async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
+   await GetStorage.init();
   runApp(const MyApp());
 }
 
@@ -63,12 +36,22 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.grey,
     ));
-    return const  MaterialApp(
+    return   GetMaterialApp(
+
+      translations: TranslationPage(),
+
+
+
+    // language change k liye he
+      locale:TranslationPage().getCurrentLocale(),
+      fallbackLocale: Locale('en','US'),
+      
       color: Colors.white,
 
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      home: HalfDouble(  childName: 'mush',     )
+      // home: HalfDouble(  childName: 'mush',     )
+      home: Welcome(),
      // dice page me translate ka question he 
      // "What is the double of
      // report page
@@ -77,5 +60,126 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+
+
+// import 'dart:async';
+// import 'dart:io' show Platform;
+// import 'package:flutter/foundation.dart' show kIsWeb;
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_tts/flutter_tts.dart';
+// import 'package:get/get.dart';
+// import 'package:get_storage/get_storage.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+
+// void main() async{
+//   await GetStorage.init();
+//   runApp(MyApp());
+// }
+
+// class MyApp extends StatefulWidget {
+//   @override
+//   _MyAppState createState() => _MyAppState();
+// }
+
+// enum TtsState { playing, stopped, paused, continued }
+
+// class _MyAppState extends State<MyApp> {
+//   late FlutterTts flutterTts;
+
+//   TtsState ttsState = TtsState.stopped;
+//   bool get isIOS => !kIsWeb && Platform.isIOS;
+//   bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+//   initTts() {
+//     flutterTts = FlutterTts();
+
+//     flutterTts.setStartHandler(() {
+//       setState(() {
+//         print("Playing");
+//         ttsState = TtsState.playing;
+//       });
+//     });
+
+//     if (isAndroid) {
+//       flutterTts.setInitHandler(() {
+//         setState(() {
+//           print("TTS Initialized");
+//         });
+//       });
+//     }
+
+//     flutterTts.setCompletionHandler(() {
+//       setState(() {
+//         print("Complete");
+//         ttsState = TtsState.stopped;
+//       });
+//     });
+//     flutterTts.setErrorHandler((msg) {
+//       setState(() {
+//         print("error: $msg");
+//         ttsState = TtsState.stopped;
+//       });
+//     });
+//   }
+
+// final box = GetStorage();
+// var checkboxValue = false;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: Text('Flutter TTS'),
+//         ),
+//         body: SingleChildScrollView(
+//           scrollDirection: Axis.vertical,
+//           child: Column(
+//             children: [
+//               _inputSection(),
+//           CheckboxListTile(
+//         title: Text('My Checkbox'),
+//         value:box.read("isCheck"),
+//         onChanged: (value) {
+//         setState(() {
+//             checkboxValue = value!;
+//           box.write("isCheck",  checkboxValue);
+//         });
+//         },
+//       )
+      
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+
+
+//   Widget _inputSection() => Container(
+//       child: InkWell(
+//         onTap: ()async{
+//         final isSave=box.read("isCheck");
+//           if(isSave){
+//              await flutterTts.speak("Safa");
+//           }
+//           else{
+            
+//         await flutterTts.setSilence(1);
+//           }
+   
+//         },
+//         child: Padding(
+//           padding: const EdgeInsets.all(8.0),
+//           child: Text("Safa"),
+//         )),
+//       );
+
+  
+// }
 
 

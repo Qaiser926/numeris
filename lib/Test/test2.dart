@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:numeris/WelcomeUI.dart';
 
 import 'package:numeris/splash/back.dart';
@@ -675,7 +676,7 @@ class Report2State extends State<Report2> {
 
     _emailController.text = newText;
 
-    newText +="\n\nAsk you parents or your teacher to check the website for an explanation of how these exercises can be done. As Numeris grows, we will add interactive exercises to help you practice." ;
+    newText +="\n\nask_you_parents_or_your_teacher_to_checkk_the_website".tr ;
 
     _emailController.text = newText;
 

@@ -149,7 +149,7 @@ class PlusMinusState extends State<PlusMinus> {
         context: context,
         builder: (context) {
           return ResultMessage(
-            message: 'Time out!',
+            message: 'Time_out!',
             onTap: i==4 ?  navigate : goToNextQuestion,
             icon: Icons.arrow_forward,
           );

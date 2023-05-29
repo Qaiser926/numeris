@@ -676,7 +676,7 @@ class ReportState extends State<Report> {
 
     _emailController.text = newText;
 
-    newText +="\n\nAsk you parents or your teacher to check the website for an explanation of how these exercises can be done. As Numeris grows, we will add interactive exercises to help you practice." ;
+    newText +="\n\nask_you_parents_or_your_teacher_to_checkk_the_website".tr ;
 
     _emailController.text = newText;
 

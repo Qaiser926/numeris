@@ -93,9 +93,12 @@ late String _email,_password;
                                   children: [
                                     SizedBox(width: screenWidth*0.03,),
                                     Text(
-                                      'Welcome_Back!'.tr,
+                                      'Welcome_Back'.tr,
+                                      overflow:TextOverflow.clip,
                                       style: TextStyle(
-                                        fontSize: screenWidth*0.038,
+                                        
+                                      overflow:TextOverflow.ellipsis,
+                                        fontSize: screenWidth*0.033,
                                         fontWeight: FontWeight.bold,
                                         color: ColorManager.yellow,
                                       ),
@@ -381,7 +384,7 @@ late String _email,_password;
                                                   10),
                                             ),
                                           ),
-                                          child: loading ? const CircularProgressIndicator(strokeWidth: 3, color: Colors.red,): Text('Login', style: TextStyle(
+                                          child: loading ? const CircularProgressIndicator(strokeWidth: 3, color: Colors.red,): Text('Login'.tr, style: TextStyle(
                                             color: ColorManager.button1,
                                             fontSize: screenWidth*0.022,
                                             fontWeight: FontWeight.bold,
@@ -397,7 +400,7 @@ late String _email,_password;
                                       Expanded(child: SizedBox(width: screenWidth*0.025,)),
 
                                        Text(
-                                        'Dont_have_an_account? '.tr,
+                                        'Dont_have_an_account?'.tr,
                                         style: TextStyle(
                                           color: Colors.white,
                                         ),

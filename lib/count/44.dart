@@ -96,7 +96,7 @@ class Q44State extends State<Q44> {
         context: context,
         builder: (context) {
           return ResultMessage(
-            message: 'Next Question',
+            message: 'Next_Question'.tr,
             onTap: goToNextQuestion,
             icon: Icons.arrow_forward,
           );

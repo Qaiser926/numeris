@@ -130,7 +130,7 @@ class DiceState extends State<Dice> {
         context: context,
         builder: (context) {
           return ResultMessage(
-            message: 'Time out!',
+            message: 'Time_out!',
             onTap:  navigate,
             icon: Icons.arrow_forward,
           );
