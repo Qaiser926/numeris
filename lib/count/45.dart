@@ -14,6 +14,11 @@ import 'package:numeris/util/color_manager.dart';
 
 import 'package:numeris/util/result_message.dart';
 
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import '../WelcomeUI.dart';
 
 
@@ -54,11 +59,29 @@ class Q45State extends State<Q45> {
     // TODO: implement initState
     super.initState();
     controllerList[0].text=',42';
+    initTts();
 
 
 
   }
 
+   late FlutterTts flutterTts;
+
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
+  }
   void buttonTapped() {
     bool success = true;
     setState(()   async {
@@ -95,6 +118,15 @@ class Q45State extends State<Q45> {
         context: context,
         builder: (context) {
           return ResultMessage(
+             // text-to-speech
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Next_Question".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Next_Question'.tr,
             onTap: goToNextQuestion,
             icon: Icons.arrow_forward,
@@ -225,20 +257,31 @@ class Q45State extends State<Q45> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
 
-                                    Text(
-                                      "Count_backwards_in_steps_of_10_from_the_number_42".tr,
-                                      textAlign: TextAlign.center,
-                                      style:
-                                      GoogleFonts.montserrat(
-                                        textStyle: TextStyle(
-                                          fontSize:  MediaQuery
-                                              .of(context)
-                                              .size
-                                              .width * 0.018, // Change font size
-                                          fontFamily: 'YourFontName', // Change font family
-                                          fontWeight: FontWeight.bold, // Change font weight
-                                          fontStyle: FontStyle.normal, // Change font style
-                                          color: ColorManager.white, // Change text color
+                                    GestureDetector(
+                                        // text-to-speech
+            onTap:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Count_backwards_in_steps_of_10_from_the_number_42".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
+                                      child: Text(
+                                        "Count_backwards_in_steps_of_10_from_the_number_42".tr,
+                                        textAlign: TextAlign.center,
+                                        style:
+                                        GoogleFonts.montserrat(
+                                          textStyle: TextStyle(
+                                            fontSize:  MediaQuery
+                                                .of(context)
+                                                .size
+                                                .width * 0.018, // Change font size
+                                            fontFamily: 'YourFontName', // Change font family
+                                            fontWeight: FontWeight.bold, // Change font weight
+                                            fontStyle: FontStyle.normal, // Change font style
+                                            color: ColorManager.white, // Change text color
+                                          ),
                                         ),
                                       ),
                                     ),

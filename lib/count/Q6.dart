@@ -23,6 +23,11 @@ import '../util/background-image1.dart';
 import '../util/views/countdown-page.dart';
 import 'Q15.dart';
 
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 
 
 
@@ -58,10 +63,27 @@ class Q6State extends State<Q6> {
     super.initState();
     controllerList[0].text=',100';
 
-
+initTts();
 
   }
 
+   late FlutterTts flutterTts;
+
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
+  }
   Future<void> buttonTapped() async {
     bool success = true;
     setState(()    {
@@ -100,6 +122,15 @@ class Q6State extends State<Q6> {
         context: context,
         builder: (context) {
           return ResultMessage(
+                  // text-to-speech
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Next_Question".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Next_Question'.tr,
             onTap: goToNextQuestion,
             icon: Icons.arrow_forward,
@@ -231,20 +262,31 @@ class Q6State extends State<Q6> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
 
-                                    Text(
-                                      "Count_backward_from_the_number_100".tr,
-                                      textAlign: TextAlign.center,
-                                      style:
-                                      GoogleFonts.montserrat(
-                                        textStyle: TextStyle(
-                                          fontSize:  MediaQuery
-                                              .of(context)
-                                              .size
-                                              .width * 0.018, // Change font size
-                                          fontFamily: 'YourFontName', // Change font family
-                                          fontWeight: FontWeight.bold, // Change font weight
-                                          fontStyle: FontStyle.normal, // Change font style
-                                          color: ColorManager.white, // Change text color
+                                    GestureDetector(
+                                         // text-to-speech
+            onTap:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Count_backward_from_the_number_100".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
+                                      child: Text(
+                                        "Count_backward_from_the_number_100".tr,
+                                        textAlign: TextAlign.center,
+                                        style:
+                                        GoogleFonts.montserrat(
+                                          textStyle: TextStyle(
+                                            fontSize:  MediaQuery
+                                                .of(context)
+                                                .size
+                                                .width * 0.018, // Change font size
+                                            fontFamily: 'YourFontName', // Change font family
+                                            fontWeight: FontWeight.bold, // Change font weight
+                                            fontStyle: FontStyle.normal, // Change font style
+                                            color: ColorManager.white, // Change text color
+                                          ),
                                         ),
                                       ),
                                     ),

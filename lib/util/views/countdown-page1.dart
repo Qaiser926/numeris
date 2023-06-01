@@ -2,11 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:numeris/WelcomeUI.dart';
 import 'package:numeris/count/Q3.dart';
 import '../color_manager.dart';
 import '../result_message.dart';
 
-
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class CountdownPage1 extends StatefulWidget {
   final Widget path;
@@ -31,23 +35,25 @@ class CountdownPage1State extends State<CountdownPage1>
 
   double progress = 1.0;
   void checkResult() {
-
     showDialog(
         barrierDismissible: false,
         context: context,
         builder: (context) {
           return ResultMessage(
+            onClick: () async {
+              final isSave = box.read("isCheck");
+              if (isSave) {
+                await flutterTts.speak("Time_out!".tr);
+              } else {
+                await flutterTts.setSilence(1);
+              }
+            },
             message: 'Time_out!'.tr,
             onTap: goToNextQuestion,
             icon: Icons.arrow_forward,
           );
         });
-
-
-
   }
-
-
 
   void goToNextQuestion() {
     // dismiss alert dialog
@@ -55,22 +61,17 @@ class CountdownPage1State extends State<CountdownPage1>
     Navigator.of(context).pop();
 
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) =>  widget.path));
+        context, MaterialPageRoute(builder: (context) => widget.path));
     // create a new question
-
   }
-
 
   void notify() {
     if (countText == '0:00:00') {
       setState(() {
         checkResult();
-
       });
     }
   }
-
 
   @override
   void initState() {
@@ -102,6 +103,25 @@ class CountdownPage1State extends State<CountdownPage1>
     // setState(() {
     //   isPlaying = true;
     // });
+    initTts();
+  }
+
+  late FlutterTts flutterTts;
+
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
   }
 
   @override
@@ -117,15 +137,12 @@ class CountdownPage1State extends State<CountdownPage1>
         alignment: Alignment.center,
         children: [
           SizedBox(
-            width: MediaQuery
-          .of(context).size.width*0.095,
-            height: MediaQuery
-        .of(context).size.width*0.093,
+            width: MediaQuery.of(context).size.width * 0.095,
+            height: MediaQuery.of(context).size.width * 0.093,
             child: CircularProgressIndicator(
               backgroundColor: Colors.grey.shade300,
               value: progress,
-              strokeWidth: MediaQuery
-                  .of(context).size.width*0.095/13.3,
+              strokeWidth: MediaQuery.of(context).size.width * 0.095 / 13.3,
             ),
           ),
           // GestureDetector(

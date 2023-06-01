@@ -5,12 +5,14 @@ class ResultMessage extends StatelessWidget {
   final String message;
   final VoidCallback onTap;
   final icon;
+  Function()? onClick;
 
-  const ResultMessage({
+   ResultMessage({
     Key? key,
     required this.message,
     required this.onTap,
     required this.icon,
+    this.onClick
   }) : super(key: key);
 
   @override
@@ -24,13 +26,16 @@ class ResultMessage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             // the result
-            Text(
-              message,
-              style:  const TextStyle(
-        fontWeight: FontWeight.bold,
-          fontSize: 30 ,
-          color: Colors.white,
-        ),
+            GestureDetector(
+              onTap: onClick,
+              child: Text(
+                message,
+                style:  const TextStyle(
+                    fontWeight: FontWeight.bold,
+                      fontSize: 30 ,
+                      color: Colors.white,
+                    ),
+              ),
             ),
 
             // button to go to next question

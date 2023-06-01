@@ -17,6 +17,11 @@ import 'package:numeris/util/color_manager.dart';
 
 import 'package:numeris/util/result_message.dart';
 
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import '../WelcomeUI.dart';
 import '../count/Q4.dart';
 import '../single addition(52-55,78-82)/Addition.dart';
@@ -43,8 +48,8 @@ class BeforeAfterState extends State<BeforeAfter> {
 
 
 
-  String question = 'While_counting_what_number_comes_after'.tr;
-  String question1 = 'While_counting_what_number_comes_before'.tr;
+  String question = 'While_counting_what_number_comes_after';
+  String question1 = 'While_counting_what_number_comes_before';
   final Color _containerColor = ColorManager.button;
   bool check = true;
   Timer? _timer;
@@ -71,13 +76,26 @@ class BeforeAfterState extends State<BeforeAfter> {
     // TODO: implement initState
     super.initState();
     startTimer();
+    initTts();
 
+  }
 
+   late FlutterTts flutterTts;
 
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
 
+  initTts() {
+    flutterTts = FlutterTts();
 
-
-
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
   }
  @override
   void dispose() {
@@ -143,6 +161,15 @@ class BeforeAfterState extends State<BeforeAfter> {
         context: context,
         builder: (context) {
           return ResultMessage(
+                     // text-to-speech
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Next_Question".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Next_Question'.tr,
             onTap: i==7 ? navigate : goToNextQuestionAddition,
             icon: Icons.arrow_forward,
@@ -158,8 +185,18 @@ class BeforeAfterState extends State<BeforeAfter> {
     showDialog(
         context: context,
         builder: (context) {
+          
           return ResultMessage(
-            message: 'Time out',
+              // text-to-speech
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Time_out".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
+            message: 'Time_out'.tr,
             onTap: i==7 ? navigate : goToNextQuestionAddition,
             icon: Icons.arrow_forward,
           );
@@ -341,19 +378,30 @@ class BeforeAfterState extends State<BeforeAfter> {
                                           SizedBox(width: screenWidth*0.03,),
 
                                           Expanded(
-                                            child: Text(
-                                              i==0||i==2||i==4||i==6? '$question $numberA ?':'$question1 $numberA ?' ,
-                                              textAlign: TextAlign.center,
-                                              style: GoogleFonts.montserrat(textStyle: TextStyle(
-                                                fontSize:  MediaQuery
-                                                    .of(context)
-                                                    .size
-                                                    .width * 0.020, // Change font size
-                                                // Change font family
-                                                fontWeight: FontWeight.bold, // Change font weight
-                                                fontStyle: FontStyle.normal, // Change font style
-                                                color: Colors.white, // Change text color
-                                              ),
+                                            child: GestureDetector(
+                                                 // text-to-speech
+            onTap:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak(i==0||i==2||i==4||i==6? question.tr+' $numberA ?':question1.tr+' $numberA ?');
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
+                                              child: Text(
+                                                i==0||i==2||i==4||i==6? question.tr+' $numberA ?':question1.tr+' $numberA ?' ,
+                                                textAlign: TextAlign.center,
+                                                style: GoogleFonts.montserrat(textStyle: TextStyle(
+                                                  fontSize:  MediaQuery
+                                                      .of(context)
+                                                      .size
+                                                      .width * 0.020, // Change font size
+                                                  // Change font family
+                                                  fontWeight: FontWeight.bold, // Change font weight
+                                                  fontStyle: FontStyle.normal, // Change font style
+                                                  color: Colors.white, // Change text color
+                                                ),
+                                                ),
                                               ),
                                             ),
                                           ),

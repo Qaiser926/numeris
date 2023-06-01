@@ -23,6 +23,11 @@ import '../util/views/countdown-page.dart';
 import '../util/views/countdown-page1.dart';
 
 
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 
 
 
@@ -73,8 +78,26 @@ class CirclesState extends State<Circles> {
     super.initState();
     number=widget.numberA;
     startTimer();
+    initTts();
   }
 
+   late FlutterTts flutterTts;
+
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -141,6 +164,15 @@ setState(() {
         context: context,
         builder: (context) {
           return ResultMessage(
+             // text-to-speech
+              onClick: () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Next_Question!".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Next_Question'.tr,
             onTap: i==1 ? navigate : goToNextQuestion,
             icon: Icons.arrow_forward,
@@ -156,6 +188,15 @@ setState(() {
         context: context,
         builder: (context) {
           return ResultMessage(
+              // text-to-speech
+              onClick: () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Time_out!".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Time_out!'.tr,
             onTap: i==1 ? navigate : goToNextQuestion,
             icon: Icons.arrow_forward,

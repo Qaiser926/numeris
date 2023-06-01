@@ -24,6 +24,11 @@ import '../subtraction(56-59,83-88)/Subtract.dart';
 import '../util/views/countdown-page.dart';
 import '../util/views/countdown-page1.dart';
 
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 
 
 
@@ -69,10 +74,26 @@ class PlusMinusState extends State<PlusMinus> {
     // TODO: implement initState
     super.initState();
     startTimer();
+initTts();
 
+  }
+  
+   late FlutterTts flutterTts;
 
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
 
+  initTts() {
+    flutterTts = FlutterTts();
 
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
   }
 
   @override
@@ -136,6 +157,15 @@ class PlusMinusState extends State<PlusMinus> {
         context: context,
         builder: (context) {
           return ResultMessage(
+                // text-to-speech
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Next_Question".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Next_Question'.tr,
             onTap: i==4 ?  navigate : goToNextQuestion,
             icon: Icons.arrow_forward,
@@ -149,6 +179,15 @@ class PlusMinusState extends State<PlusMinus> {
         context: context,
         builder: (context) {
           return ResultMessage(
+                    // text-to-speech
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Time_out!".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Time_out!',
             onTap: i==4 ?  navigate : goToNextQuestion,
             icon: Icons.arrow_forward,
@@ -338,25 +377,36 @@ class PlusMinusState extends State<PlusMinus> {
                                           SizedBox(width: screenWidth*0.03,),
 
                                           Expanded(
-                                         child: Text(
-                                            i==0? question :i==1? question1: i==2? question2: i==3? question3 : question4 ,
-                                            textAlign: TextAlign.center,
-                                            style:GoogleFonts.montserrat(textStyle: TextStyle(
-                                              fontSize:   i==3?MediaQuery
-                                                  .of(context)
-                                                  .size
-                                                  .width * 0.020:MediaQuery
-                                                  .of(context)
-                                                  .size
-                                                  .width * 0.020, // Change font size
-                                              // Change font family
-                                              fontWeight: FontWeight.bold, // Change font weight
-                                              fontStyle: FontStyle.normal, // Change font style
-                                              color: Colors.white, // Change text color
+                                         child: GestureDetector(
+                                                   // text-to-speech
+            onTap:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak( i==0? question :i==1? question1.tr: i==2? question2.tr: i==3? question3.tr : question4.tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
+                                           child: Text(
+                                              i==0? question :i==1? question1.tr: i==2? question2.tr: i==3? question3.tr : question4.tr ,
+                                              textAlign: TextAlign.center,
+                                              style:GoogleFonts.montserrat(textStyle: TextStyle(
+                                                fontSize:   i==3?MediaQuery
+                                                    .of(context)
+                                                    .size
+                                                    .width * 0.020:MediaQuery
+                                                    .of(context)
+                                                    .size
+                                                    .width * 0.020, // Change font size
+                                                // Change font family
+                                                fontWeight: FontWeight.bold, // Change font weight
+                                                fontStyle: FontStyle.normal, // Change font style
+                                                color: Colors.white, // Change text color
+                                              ),
+                                              ),
+                                         
                                             ),
-                                            ),
-
-                                          ),
+                                         ),
                                       ),
                                           SizedBox(width: screenWidth*0.03,),
 

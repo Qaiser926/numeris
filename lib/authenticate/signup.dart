@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:numeris/Dice(21,36,46)/Dice.dart';
+import 'package:numeris/WelcomeUI.dart';
 import 'package:numeris/authenticate/login.dart';
 import 'package:numeris/util/background-image.dart';
 import 'package:numeris/util/utilis.dart';
+
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import '../util/color_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,6 +32,32 @@ class RegisterState extends State<Register> {
   late String _email,_password;
   String hint="mail@gmail.com";
   String hintPassword="******";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initState();
+  }
+
+   late FlutterTts flutterTts;
+
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight=  MediaQuery
@@ -84,13 +116,27 @@ class RegisterState extends State<Register> {
                               Row(
                                 children: [
                                   SizedBox(width: screenWidth*0.13,),
-                                  Text(
-                                    'Welcome_to'.tr,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: screenWidth*0.016,
-                                      color: Colors.white,
+                                  GestureDetector(
+                                      onTap: () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(
+                                                      "Welcome_to".tr
+                                                          .tr);
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
+                                    child: Text(
+                                      'Welcome_to'.tr,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: screenWidth*0.016,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                   // Text(
@@ -170,10 +216,24 @@ class RegisterState extends State<Register> {
                                             mainAxisAlignment: MainAxisAlignment
                                                 .start,
                                             children: [
-                                              Text("Email".tr, style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: ColorManager.Yellow
-                                              ),),
+                                              GestureDetector(
+                                                onTap:  () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(
+                                                      "Email".tr
+                                                          .tr);
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
+                                                child: Text("Email".tr, style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: ColorManager.Yellow
+                                                ),),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -259,10 +319,24 @@ class RegisterState extends State<Register> {
                                             mainAxisAlignment: MainAxisAlignment
                                                 .start,
                                             children: [
-                                              Text("Password".tr, style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: ColorManager.Yellow
-                                              ),),
+                                              GestureDetector(
+                                                onTap:  () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(
+                                                      "Password".tr
+                                                          .tr);
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
+                                                child: Text("Password".tr, style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: ColorManager.Yellow
+                                                ),),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -389,12 +463,26 @@ class RegisterState extends State<Register> {
                                     children: [
                                       Expanded(child: SizedBox(width: screenWidth*0.025,)),
 
-                                       Text(
-                                        'Already_have_an_account? '.tr,
-                                        style:const TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
+                                       GestureDetector(
+                                        onTap:  () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(
+                                                      "Already_have_an_account?".tr
+                                                          .tr);
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
+                                         child: Text(
+                                          'Already_have_an_account?'.tr,
+                                          style:const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                                                             ),
+                                       ),
                                       GestureDetector(
                                         onTap: () {
                                           Navigator.push(

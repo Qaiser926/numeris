@@ -1,11 +1,12 @@
-
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:flutter_tts/flutter_tts_web.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:numeris/authenticate/login.dart';
@@ -24,6 +25,7 @@ import 'Test/test2.dart';
 import 'lagnuage/languageChange/langChanger.dart';
 
 import 'dart:async';
+  final box = GetStorage();
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
 
@@ -32,18 +34,18 @@ class Welcome extends StatefulWidget {
 }
 
 class WelcomeState extends State<Welcome> {
-   bool _isChecked = true;
+  bool _isChecked = true;
   String _currText = '';
 
-  List<String> text = ["Text-to-Speech"];
 
-  String dropdownValue = 'Select';
+
+  var dropdownValue;
   final FirebaseAuth auth = FirebaseAuth.instance;
-  String childName = "";
+  String childName = "Select";
   int i = 0;
   late String _email, _password;
   String hint = "mail@gmail.com";
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController selectChildController = TextEditingController();
   List<String> _dropdownItems = ['Select'];
   final Map<String, dynamic> docData = {
     'Q1': '',
@@ -54,7 +56,7 @@ class WelcomeState extends State<Welcome> {
 
 // Function to update the items list with the new value entered by the user
   void _updateDropdownItems(String newValue) {
-    if (!_dropdownItems.contains(newValue)) {
+    if (_dropdownItems.contains(newValue)) {
       // Add the new value to the list
       _dropdownItems.add(newValue);
       // Set the dropdown value to the new value
@@ -85,25 +87,18 @@ class WelcomeState extends State<Welcome> {
     super.initState();
 
     lng = TranslationPage().getCurrentLang();
-    getDocuments();
+    // getDocuments();
     initTts();
   }
 
   late FlutterTts flutterTts;
 
-  TtsState ttsState = TtsState.stopped;
+  // TtsState ttsState = TtsState.stopped;
   bool get isIOS => !kIsWeb && Platform.isIOS;
   bool get isAndroid => !kIsWeb && Platform.isAndroid;
 
   initTts() {
     flutterTts = FlutterTts();
-
-    flutterTts.setStartHandler(() {
-      setState(() {
-        print("Playing");
-        ttsState = TtsState.playing;
-      });
-    });
 
     if (isAndroid) {
       flutterTts.setInitHandler(() {
@@ -112,23 +107,10 @@ class WelcomeState extends State<Welcome> {
         });
       });
     }
-
-    flutterTts.setCompletionHandler(() {
-      setState(() {
-        print("Complete");
-        ttsState = TtsState.stopped;
-      });
-    });
-    flutterTts.setErrorHandler((msg) {
-      setState(() {
-        print("error: $msg");
-        ttsState = TtsState.stopped;
-      });
-    });
   }
 
-final box = GetStorage();
-var checkboxValue = false;
+
+  var checkboxValue = false;
 
   @override
   Widget build(BuildContext context) {
@@ -271,10 +253,10 @@ var checkboxValue = false;
                                                 ),
                                                 //  child:Text("profie"),
                                                 child: Text(
-                                                  auth.currentUser!.email!
-                                                      .split('@')[0]
-                                                      .toUpperCase(),
-                                                  style: TextStyle(
+                                             auth.currentUser?.email!=null? auth.currentUser!.email!
+                                              .split('@')[0]
+                                                      .toUpperCase():
+                                                "Please Login"  ,                                                style: TextStyle(
                                                     fontSize:
                                                         screenWidth * 0.014,
                                                     fontWeight: FontWeight.bold,
@@ -298,7 +280,12 @@ var checkboxValue = false;
                                               padding: const EdgeInsets.only(
                                                   bottom: 0),
                                               child: TextButton(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  _settingDialog(
+                                                          context,
+                                                          screenHeight,
+                                                          screenWidth);
+                                                },
                                                 style: TextButton.styleFrom(
                                                   backgroundColor: Colors
                                                       .transparent, // set background color to transparent
@@ -314,14 +301,7 @@ var checkboxValue = false;
                                                             2), // set border width and color
                                                   ),
                                                 ),
-                                                child: InkWell(
-                                                    onTap: () {
-                                                      _settingDialog(
-                                                          context,
-                                                          screenHeight,
-                                                          screenWidth);
-                                                    },
-                                                    child: Text("Setting")),
+                                                child: Text("Setting"),
                                               ),
                                             ),
                                           ),
@@ -353,15 +333,29 @@ var checkboxValue = false;
                                                 .transparent, // set container background color
                                           ),
                                           child: Center(
-                                            child: Text(
-                                              "add_interactive_exercises".tr,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: ColorManager
-                                                    .white, // set text color
-                                                fontSize: screenWidth *
-                                                    0.016, // set font size
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(
+                                                      "add_interactive_exercises"
+                                                          .tr);
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
+                                              child: Text(
+                                                "add_interactive_exercises".tr,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: ColorManager
+                                                      .white, // set text color
+                                                  fontSize: screenWidth *
+                                                      0.016, // set font size
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -383,14 +377,14 @@ var checkboxValue = false;
                                             onPressed: () {
                                               setState(() async {
                                                 _updateDropdownItems(
-                                                    _emailController.text
+                                                    selectChildController.text
                                                         .toString());
                                                 await FirebaseFirestore.instance
                                                     .collection(FirebaseAuth
                                                         .instance
                                                         .currentUser!
                                                         .email!)
-                                                    .doc(_emailController.text
+                                                    .doc(selectChildController.text
                                                         .toString())
                                                     .set({}).then((value) =>
                                                         Utlils().toast(
@@ -478,12 +472,12 @@ var checkboxValue = false;
                                         SizedBox(
                                           width: screenWidth * 0.013,
                                         ),
-                                        // Flexible(
-                                        //   child: SizedBox(
-                                        //       height: screenHeight * 0.143,
-                                        //       width: screenWidth * 0.26,
-                                        //       child: dropDownButton()),
-                                        // ),
+                                        Flexible(
+                                          child: SizedBox(
+                                              height: screenHeight * 0.143,
+                                              width: screenWidth * 0.26,
+                                              child: dropDownButton()),
+                                        ),
                                       ],
                                     )
                                   ]),
@@ -589,6 +583,18 @@ var checkboxValue = false;
                                           context: context,
                                           builder: (context) {
                                             return ResultMessage(
+                                                 onClick: () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(
+                                                      "Feature_not_available"
+                                                          .tr);
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
                                               message:
                                                   'Feature_not_available'.tr,
                                               onTap: () {
@@ -694,48 +700,53 @@ var checkboxValue = false;
           return Container(
             child: AlertDialog(
               content: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Flexible(
                     child: SizedBox(
-                        // height: screenHeight * 0.143,
+                        height: screenHeight * 0.143,
                         // width: screenWidth * 0.26,
                         child: Padding(
-                          padding:  EdgeInsets.symmetric(horizontal: Get.size.height*0.05),
-                          child: DropdownButton<String>(
-                            // menuMaxHeight: Get.size.height * 0.15,
-                            value: this.lng,
-                            underline: Container(),
-                            isExpanded: true,
-                            onChanged: (newVal) {
-                              setState(() {
-                                this.lng = newVal!;
-                                TranslationPage().changeLocale(newVal);
-                              });
-                            },
-                            items: TranslationPage.langs.map((value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Row(
-                                  children: [
-                                    Text(value),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        )),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: Get.size.height * 0.05),
+                      child: DropdownButton<String>(
+                        // menuMaxHeight: Get.size.height * 0.15,
+                        value: this.lng,
+                        underline: Container(),
+                        isExpanded: true,
+                        onChanged: (newVal) {
+                          setState(() {
+                            Navigator.pop(context);
+                            this.lng = newVal!;
+                            TranslationPage().changeLocale(newVal);
+                          });
+                        },
+                        
+                        items: TranslationPage.langs.map((value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Row(
+                              children: [
+                                Text(value),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    )),
                   ),
-                   Expanded(
-              child:    CheckboxListTile(
-        title: Text('My Checkbox'),
-        value:box.read("isCheck"),
-        onChanged: (value) {
-        setState(() {
-            checkboxValue = value!;
-          box.write("isCheck",  checkboxValue);
-        });
-        },
-      ))
+                  Expanded(
+                      child: CheckboxListTile(
+                    title: Text('My Checkbox'),
+                    value: box.read("isCheck"),
+                    onChanged: (value) {
+                      setState(() {
+                        Navigator.pop(context);
+                        checkboxValue = value!;
+                        box.write("isCheck", checkboxValue);
+                      });
+                    },
+                  ))
                 ],
               ),
               actions: [
@@ -750,78 +761,80 @@ var checkboxValue = false;
         });
   }
 
-  // Widget dropDownButton() {
-  //   return DropdownButtonFormField<String>(
-  //     value: dropdownValue,
-  //     onChanged: (newValue) {
-  //       setState(() {
-  //         childName = newValue!;
-  //         dropdownValue = newValue.tr;
-  //       });
-  //       Utlils().toast('Child_Selected'.tr);
-  //     },
-  //     iconSize: MediaQuery.of(context).size.width * 0.028,
-  //     decoration: const InputDecoration(
-  //       enabledBorder: OutlineInputBorder(
-  //         borderSide: BorderSide(
-  //           width: 3,
-  //           color: Colors.blue,
-  //         ),
-  //       ),
-  //       focusedBorder: OutlineInputBorder(
-  //         borderSide: BorderSide(
-  //           width: 3,
-  //           color: Colors.blue,
-  //         ),
-  //       ),
-  //     ),
-  //     items: _dropdownItems.map<DropdownMenuItem<String>>((String value) {
-  //       return DropdownMenuItem<String>(
-  //         value: value,
-  //         child: Text(
-  //           value.tr,
-  //           style: TextStyle(
-  //             color: ColorManager.white,
-  //             fontWeight: FontWeight.bold,
-  //             fontSize: MediaQuery.of(context).size.width * 0.0140,
-  //           ),
-  //         ),
-  //       );
-  //     }).toList(),
-  //     style: TextStyle(
-  //       color: ColorManager.white,
-  //       fontWeight: FontWeight.bold,
-  //       fontSize: MediaQuery.of(context).size.width * 0.0130,
-  //     ),
-  //     dropdownColor: Colors.white60,
-  //     iconEnabledColor: Colors.white,
-  //   );
-  // }
+  Widget dropDownButton() {
+    return 
+   
+    DropdownButtonFormField<String>(
+      value: dropdownValue, 
+      onChanged: (newValue) {
+        setState(() {
+          childName = newValue!;
+         dropdownValue = newValue;
+        });
+        Utlils().toast('Child_Selected'.tr);
+      },
+      iconSize: MediaQuery.of(context).size.width * 0.028,
+      decoration: const InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 3,
+            color: Colors.blue,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 3,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+      items: _dropdownItems.map((value) {
+        return DropdownMenuItem(
+          value: value,
+          child: Text(
+            value,
+            style: TextStyle(
+              color: ColorManager.white,
+              fontWeight: FontWeight.bold,
+              fontSize: MediaQuery.of(context).size.width * 0.0140,
+            ),
+          ),
+        );
+      }).toList(),
+      style: TextStyle(
+        color: ColorManager.white,
+        fontWeight: FontWeight.bold,
+        fontSize: MediaQuery.of(context).size.width * 0.0130,
+      ),
+      dropdownColor: Colors.white60,
+      iconEnabledColor: Colors.white,
+    );
+  }
 
   Widget field() {
     return TextField(
       textAlign: TextAlign.start,
       textAlignVertical: TextAlignVertical.bottom,
       onTap: () {
-        setState(() {
-          showDialog(
-              barrierDismissible: true,
-              context: context,
-              builder: (context) {
-                return NameMessage(
-                  emailController: _emailController,
-                  message: 'Enter_Name'.tr,
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: Icons.arrow_forward,
-                );
-              });
-        });
+        // setState(() {
+        //   showDialog(
+        //       barrierDismissible: true,
+        //       context: context,
+        //       builder: (context) {
+        //         return NameMessage(
+        //           emailController: _emailController,
+        //           message: 'Enter_Name'.tr,
+        //           onTap: () {
+        //             Navigator.of(context).pop();
+        //           },
+        //           icon: Icons.arrow_forward,
+        //         );
+        //       });
+        // });
       },
-      onSubmitted: _updateDropdownItems,
-      readOnly: true,
-      controller: _emailController,
+      // onSubmitted: _updateDropdownItems,
+      readOnly: false,
+      controller: selectChildController,
       style: TextStyle(
         fontWeight: FontWeight.bold,
         color: ColorManager.white,

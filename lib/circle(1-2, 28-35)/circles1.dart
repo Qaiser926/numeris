@@ -1,6 +1,3 @@
-
-
-
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,12 +19,10 @@ import '../single addition(52-55,78-82)/Addition.dart';
 import '../util/views/countdown-page.dart';
 import '../util/views/countdown-page1.dart';
 
-
-
-
-
-
-
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Circles1 extends StatefulWidget {
   final int numberA;
@@ -39,9 +34,6 @@ class Circles1 extends StatefulWidget {
 }
 
 class Circles1State extends State<Circles1> {
-
-
-
   String answer = '';
   final Color _containerColor = ColorManager.button;
   bool check = true;
@@ -50,170 +42,197 @@ class Circles1State extends State<Circles1> {
   Color targetColor = ColorManager.offWhite;
 
   int i = 0;
-  int j=0;
-
-
+  int j = 0;
 
   late int number;
-  int numberB=20;
-  String userAnswer='?';
+  int numberB = 20;
+  String userAnswer = '?';
   List<Positioned> _positionedWidgets = [];
-
-
-
-
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    number=widget.numberA;
-
-
-
-
-
+    number = widget.numberA;
+    initTts();
   }
+
+  late FlutterTts flutterTts;
+
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final size = MediaQuery.of(context).size;
 
-
-    final p = _generatePositionedWidgets(Size(size.width*0.514, size.height*0.653));
+    final p = _generatePositionedWidgets(
+        Size(size.width * 0.514, size.height * 0.653));
 
     setState(() {
-      _positionedWidgets=p;
+      _positionedWidgets = p;
     });
-
   }
 
-  void navigate(){
+  void navigate() {
     Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) =>   Dice(childName:widget.childName, number: 10,)));
+        MaterialPageRoute(
+            builder: (context) => Dice(
+                  childName: widget.childName,
+                  number: 10,
+                )));
   }
 
   Future<void> buttonTapped() async {
-
     setState(() {
       checkResultAddition();
     });
     final FirebaseAuth auth = FirebaseAuth.instance;
-    final  currentUser = auth.currentUser;
-    final CollectionReference userCollection = FirebaseFirestore.instance.collection(currentUser!.email!);
-    i==0 && userAnswer==number.toString()? await userCollection.doc(widget.childName).update({"Q28": "1"}):
-    i==0 && userAnswer!=number.toString()? await userCollection.doc(widget.childName).update({"Q28": "0"}):
-
-    i==1 && userAnswer==number.toString()?await userCollection.doc(widget.childName).update({"Q29": "1"}):
-    i==1 && userAnswer!=number.toString()?await userCollection.doc(widget.childName).update({"Q29": "0"}):
-    i==2 && userAnswer==number.toString()?await userCollection.doc(widget.childName).update({"Q30": "1"}):
-    i==2 && userAnswer!=number.toString()?await userCollection.doc(widget.childName).update({"Q30": "0"}):
-    i==3 && userAnswer==number.toString()?await userCollection.doc(widget.childName).update({"Q31": "1"}):
-    i==3 && userAnswer!=number.toString()?await userCollection.doc(widget.childName).update({"Q31": "0"}):
-    i==4 && userAnswer==number.toString()?await userCollection.doc(widget.childName).update({"Q32": "1"}):
-    i==4 && userAnswer!=number.toString()?await userCollection.doc(widget.childName).update({"Q32": "0"}):
-    i==5 && userAnswer==number.toString()?await userCollection.doc(widget.childName).update({"Q33": "1"}):
-    i==5 && userAnswer!=number.toString()?await userCollection.doc(widget.childName).update({"Q33": "0"}):
-    i==6 && userAnswer==number.toString()?await userCollection.doc(widget.childName).update({"Q34": "1"}):
-    i==6 && userAnswer!=number.toString()?await userCollection.doc(widget.childName).update({"Q34": "0"}):
-    i==7 && userAnswer==number.toString()?await userCollection.doc(widget.childName).update({"Q35": "1"}):
-    i==7 && userAnswer!=number.toString()?await userCollection.doc(widget.childName).update({"Q35": "0"}):null;
-
-
-
-
+    final currentUser = auth.currentUser;
+    final CollectionReference userCollection =
+        FirebaseFirestore.instance.collection(currentUser!.email!);
+    i == 0 && userAnswer == number.toString()
+        ? await userCollection.doc(widget.childName).update({"Q28": "1"})
+        : i == 0 && userAnswer != number.toString()
+            ? await userCollection.doc(widget.childName).update({"Q28": "0"})
+            : i == 1 && userAnswer == number.toString()
+                ? await userCollection
+                    .doc(widget.childName)
+                    .update({"Q29": "1"})
+                : i == 1 && userAnswer != number.toString()
+                    ? await userCollection
+                        .doc(widget.childName)
+                        .update({"Q29": "0"})
+                    : i == 2 && userAnswer == number.toString()
+                        ? await userCollection
+                            .doc(widget.childName)
+                            .update({"Q30": "1"})
+                        : i == 2 && userAnswer != number.toString()
+                            ? await userCollection
+                                .doc(widget.childName)
+                                .update({"Q30": "0"})
+                            : i == 3 && userAnswer == number.toString()
+                                ? await userCollection
+                                    .doc(widget.childName)
+                                    .update({"Q31": "1"})
+                                : i == 3 && userAnswer != number.toString()
+                                    ? await userCollection
+                                        .doc(widget.childName)
+                                        .update({"Q31": "0"})
+                                    : i == 4 && userAnswer == number.toString()
+                                        ? await userCollection
+                                            .doc(widget.childName)
+                                            .update({"Q32": "1"})
+                                        : i == 4 &&
+                                                userAnswer != number.toString()
+                                            ? await userCollection
+                                                .doc(widget.childName)
+                                                .update({"Q32": "0"})
+                                            : i == 5 &&
+                                                    userAnswer ==
+                                                        number.toString()
+                                                ? await userCollection
+                                                    .doc(widget.childName)
+                                                    .update({"Q33": "1"})
+                                                : i == 5 &&
+                                                        userAnswer !=
+                                                            number.toString()
+                                                    ? await userCollection
+                                                        .doc(widget.childName)
+                                                        .update({"Q33": "0"})
+                                                    : i == 6 &&
+                                                            userAnswer ==
+                                                                number
+                                                                    .toString()
+                                                        ? await userCollection
+                                                            .doc(widget.childName)
+                                                            .update({"Q34": "1"})
+                                                        : i == 6 && userAnswer != number.toString()
+                                                            ? await userCollection.doc(widget.childName).update({"Q34": "0"})
+                                                            : i == 7 && userAnswer == number.toString()
+                                                                ? await userCollection.doc(widget.childName).update({"Q35": "1"})
+                                                                : i == 7 && userAnswer != number.toString()
+                                                                    ? await userCollection.doc(widget.childName).update({"Q35": "0"})
+                                                                    : null;
   }
+
   // check if user is correct or not
   void checkResultAddition() {
-
-
     showDialog(
         context: context,
         builder: (context) {
           return ResultMessage(
             message: 'Next_Question'.tr,
-            onTap: i==7 ? navigate : goToNextQuestion,
+            onTap: i == 7 ? navigate : goToNextQuestion,
             icon: Icons.arrow_forward,
           );
         });
-
-
-
   }
-
 
   // create random numbers
   var randomNumber = Random();
 
   // GO TO NEXT QUESTION
   void goToNextQuestion() {
-
     // dismiss alert dialog
     setState(() {
       i++;
-      if(i==1){
-        number=8;
+      if (i == 1) {
+        number = 8;
+      } else if (i == 2) {
+        number = 6;
+      } else if (i == 3) {
+        number = 10;
+      } else if (i == 4) {
+        number = 9;
+      } else if (i == 5) {
+        number = 14;
+      } else if (i == 6) {
+        number = 19;
+      } else if (i == 7) {
+        number = 16;
       }
-      else if(i==2){
-        number=6;
-      }
-      else if(i==3){
-        number=10;
-      }
-      else if(i==4){
-        number=9;
-      }
-      else if(i==5){
-        number=14;
-      }
-      else if(i==6){
-        number=19;
-      }
-      else if(i==7){
-        number=16;
-      }
-      _positionedWidgets= _generatePositionedWidgets( Size(MediaQuery.of(context).size.width*0.514, MediaQuery.of(context).size.height*0.653));
-      userAnswer='?';
-
+      _positionedWidgets = _generatePositionedWidgets(Size(
+          MediaQuery.of(context).size.width * 0.514,
+          MediaQuery.of(context).size.height * 0.653));
+      userAnswer = '?';
     });
     Navigator.of(context).pop();
 
     // reset values
 
     // create a new question
-
-
-
-
   }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
-
     return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints)
-      {
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double screenHeight = MediaQuery.of(context).size.height;
 
-
-        final double screenHeight=MediaQuery
-            .of(context)
-            .size
-            .height;
-
-        final double screenWidth=MediaQuery
-            .of(context)
-            .size
-            .width;
+        final double screenWidth = MediaQuery.of(context).size.width;
 
         return SafeArea(
           child: Stack(
             children: [
-              const BackgroundImage(imagePath: "assets/new.jpg",),
+              const BackgroundImage(
+                imagePath: "assets/new.jpg",
+              ),
               Scaffold(
                 backgroundColor: Colors.transparent,
                 body: Row(
@@ -221,9 +240,9 @@ class Circles1State extends State<Circles1> {
                     Expanded(
                       flex: 1,
                       child: Padding(
-                        padding:  EdgeInsets.only(top: screenHeight*0.0025),
+                        padding: EdgeInsets.only(top: screenHeight * 0.0025),
                         child: SizedBox(
-                          width: screenWidth*0.003,
+                          width: screenWidth * 0.003,
                           // decoration: BoxDecoration(
                           //   border: Border.all(
                           //     color: ColorManager.green,
@@ -234,56 +253,60 @@ class Circles1State extends State<Circles1> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: screenWidth*0.01,),
+                              SizedBox(
+                                height: screenWidth * 0.01,
+                              ),
                               Row(
                                 children: [
-                                  SizedBox(width: screenWidth*0.012,),
-                                  ExitButton(Icons.close_outlined, ColorManager.LightRed, onPressed:(){
+                                  SizedBox(
+                                    width: screenWidth * 0.012,
+                                  ),
+                                  ExitButton(Icons.close_outlined,
+                                      ColorManager.LightRed, onPressed: () {
                                     Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(builder: (context) => const Back(imagePath: 'assets/circleIndicator.json', path: Welcome(),)),
+                                      MaterialPageRoute(
+                                          builder: (context) => const Back(
+                                                imagePath:
+                                                    'assets/circleIndicator.json',
+                                                path: Welcome(),
+                                              )),
                                     );
                                   }),
-
                                 ],
                               ),
-
-
-
-
                             ],
                           ),
                         ),
                       ),
                     ),
                     Expanded(
-
                         child: Container(
-                          // decoration: BoxDecoration(
-                          //   border: Border.all(
-                          //     color: ColorManager.r,
-                          //     width: 2,
-                          //   ),
-                          // ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                      // decoration: BoxDecoration(
+                      //   border: Border.all(
+                      //     color: ColorManager.r,
+                      //     width: 2,
+                      //   ),
+                      // ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(height: screenHeight * 0.08),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(height:screenHeight*0.08),
-
-
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-
-                                  CountdownPage1(path:   Dice(childName:widget.childName, number: 10,),),
-                                  // SizedBox(width: screenWidth*0.008,)
-
-                                ],
+                              CountdownPage1(
+                                path: Dice(
+                                  childName: widget.childName,
+                                  number: 10,
+                                ),
                               ),
-
+                              // SizedBox(width: screenWidth*0.008,)
                             ],
                           ),
-                        )),
+                        ],
+                      ),
+                    )),
                     // SizedBox(width:MediaQuery
                     //     .of(context)
                     //         .size.width*0.05),
@@ -296,19 +319,14 @@ class Circles1State extends State<Circles1> {
                         //     width: 2,
                         //   ),
                         // ),
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height * 0.93,
-
+                        height: MediaQuery.of(context).size.height * 0.93,
 
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            SizedBox(height: MediaQuery
-                                .of(context)
-                                .size
-                                .height * 0.05,),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.05,
+                            ),
                             Expanded(
                               flex: 4,
                               child: Container(
@@ -318,50 +336,72 @@ class Circles1State extends State<Circles1> {
                                 //     width: 2,
                                 //   ),
                                 // ),
-                                padding: EdgeInsets.all( MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height * 0.02),
+                                padding: EdgeInsets.all(
+                                    MediaQuery.of(context).size.height * 0.02),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    SizedBox(height: screenHeight*0.01,),
-
-
+                                    SizedBox(
+                                      height: screenHeight * 0.01,
+                                    ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        SizedBox(width: screenWidth*0.01,),
+                                        SizedBox(
+                                          width: screenWidth * 0.01,
+                                        ),
                                         Expanded(
                                           flex: 5,
-                                          child: Text(
-                                            "How_many_circles_do_you_see".tr ,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize:
-                                              MediaQuery
-                                                  .of(context)
-                                                  .size
-                                                  .width * 0.025, // Change font size
-                                              fontFamily: 'YourFontName', // Change font family
-                                              fontWeight: FontWeight.bold, // Change font weight
-                                              fontStyle: FontStyle.normal, // Change font style
-                                              color: ColorManager.white, // Change text color
+                                          child: GestureDetector(
+                                            onTap: // text-to-speech
+                                                () async {
+                                              final isSave =
+                                                  box.read("isCheck");
+                                              if (isSave) {
+                                                await flutterTts.speak(
+                                                    "How_many_circles_do_you_see"
+                                                        .tr);
+                                              } else {
+                                                await flutterTts.setSilence(1);
+                                              }
+                                            },
+                                            child: Text(
+                                              "How_many_circles_do_you_see".tr,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.025, // Change font size
+                                                fontFamily:
+                                                    'YourFontName', // Change font family
+                                                fontWeight: FontWeight
+                                                    .bold, // Change font weight
+                                                fontStyle: FontStyle
+                                                    .normal, // Change font style
+                                                color: ColorManager
+                                                    .white, // Change text color
+                                              ),
                                             ),
                                           ),
                                         ),
                                         // SizedBox(width: screenWidth*0.013,),
-                                        Expanded(child: ButtonAnswer(userAnswer, () { }, ColorManager.button),),
+                                        Expanded(
+                                          child: ButtonAnswer(userAnswer, () {},
+                                              ColorManager.button),
+                                        ),
 
-                                        SizedBox(width: screenWidth*0.025,),
-
+                                        SizedBox(
+                                          width: screenWidth * 0.025,
+                                        ),
                                       ],
                                     ),
-
-                                    SizedBox(height:  MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height * 0.03,),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.03,
+                                    ),
                                     Expanded(
                                       child: Row(
                                         children: [
@@ -377,30 +417,21 @@ class Circles1State extends State<Circles1> {
                                               //   color: Colors.transparent,
                                               // ),
 
-
                                               child: Stack(
                                                   fit: StackFit.expand,
-                                                  children:  _positionedWidgets
-                                              ),
-
+                                                  children: _positionedWidgets),
                                             ),
                                           ),
                                           const Expanded(child: SizedBox()),
                                         ],
                                       ),
                                     ),
-
                                   ],
                                 ),
                               ),
                             ),
-
                             Container(
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height * 1.2,
-
+                              width: MediaQuery.of(context).size.height * 1.2,
                             ),
                           ],
                         ),
@@ -410,7 +441,6 @@ class Circles1State extends State<Circles1> {
                     Expanded(
                       flex: 2,
                       child: Row(
-
                         children: [
                           const Expanded(child: SizedBox()),
                           Expanded(
@@ -418,187 +448,174 @@ class Circles1State extends State<Circles1> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-
-                                SizedBox(height: screenHeight*0.07,),
-
+                                SizedBox(
+                                  height: screenHeight * 0.07,
+                                ),
                                 Expanded(
                                   child: Container(
                                     // height:330,
 
-
-
                                     // margin: EdgeInsets.fromLTRB(0, 17, 10,0),
                                     // padding: EdgeInsets.all(10),
-                                 decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(MediaQuery
-                                .of(context).size.width*0.052/2.8),
-                            border: Border.all(width: MediaQuery
-                                .of(context).size.width*0.004, color:ColorManager.LightRed),
-                            color: Colors.transparent,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    KeypadButton('1', () {
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          MediaQuery.of(context).size.width *
+                                              0.052 /
+                                              2.8),
+                                      border: Border.all(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.004,
+                                          color: ColorManager.LightRed),
+                                      color: Colors.transparent,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            KeypadButton('1', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '1';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '1';
                                                 }
                                               });
                                             }),
                                             KeypadButton('2', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '2';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '2';
                                                 }
-
                                               });
                                             }),
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
                                             KeypadButton('3', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '3';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '3';
                                                 }
-
                                               });
                                             }),
                                             KeypadButton('4', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '4';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '4';
                                                 }
-
                                               });
                                             }),
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
                                             KeypadButton('5', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '5';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '5';
                                                 }
-
                                               });
                                             }),
                                             KeypadButton('6', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '6';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '6';
                                                 }
-
                                               });
                                             }),
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
                                             KeypadButton('7', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '7';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '7';
                                                 }
-
                                               });
                                             }),
                                             KeypadButton('8', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '8';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '8';
                                                 }
-
                                               });
                                             }),
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
                                             KeypadButton('9', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '9';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '9';
                                                 }
-
                                               });
                                             }),
                                             KeypadButton('0', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '0';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '0';
                                                 }
-
                                               });
                                             }),
                                           ],
                                         ),
                                         const SizedBox(height: 2),
                                         Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            ActionButton(Icons.arrow_back, ColorManager.maroon, onPressed: (){
+                                            ActionButton(Icons.arrow_back,
+                                                ColorManager.maroon,
+                                                onPressed: () {
                                               setState(() {
-                                                userAnswer='?';
+                                                userAnswer = '?';
                                               });
-                                            }
-
-
-                                            ),
-                                            ActionButton(Icons.check, ColorManager.lightGreen,onPressed: (){
+                                            }),
+                                            ActionButton(Icons.check,
+                                                ColorManager.lightGreen,
+                                                onPressed: () {
                                               // if(controllerList[i].text.toString()!='' && i<=6){
 
                                               buttonTapped();
 
-
-
                                               // }
-
-
-
-
                                             }),
                                           ],
                                         ),
@@ -606,15 +623,18 @@ class Circles1State extends State<Circles1> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: screenHeight*0.07,),
+                                SizedBox(
+                                  height: screenHeight * 0.07,
+                                ),
                               ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(width: screenWidth*0.05,),
-
+                    SizedBox(
+                      width: screenWidth * 0.05,
+                    ),
                   ],
                 ),
               ),
@@ -623,8 +643,8 @@ class Circles1State extends State<Circles1> {
         );
       },
     );
-
   }
+
   List<Positioned> _generatePositionedWidgets(Size containerSize) {
     List<Positioned> positionedWidgets = [];
 
@@ -640,20 +660,25 @@ class Circles1State extends State<Circles1> {
       positionedWidgets.add(Positioned(
         top: top,
         right: right,
-        child: Image.asset('assets/green_ball.png',height: MediaQuery.of(context).size.width*0.05,width: MediaQuery.of(context).size.width*0.05),
+        child: Image.asset('assets/green_ball.png',
+            height: MediaQuery.of(context).size.width * 0.05,
+            width: MediaQuery.of(context).size.width * 0.05),
       ));
     }
 
     return positionedWidgets;
   }
 
-  bool _isOverlapping(double top, double right, List<Positioned> positionedWidgets) {
+  bool _isOverlapping(
+      double top, double right, List<Positioned> positionedWidgets) {
     for (int i = 0; i < positionedWidgets.length; i++) {
       final Positioned positioned = positionedWidgets[i];
       final double? otherTop = positioned.top;
       final double? otherRight = positioned.right;
-      final double distance = sqrt(pow(top - otherTop!, 2) + pow(right - otherRight!, 2));
-      if (distance < 40) { // adjust this value to increase or decrease the minimum distance between widgets
+      final double distance =
+          sqrt(pow(top - otherTop!, 2) + pow(right - otherRight!, 2));
+      if (distance < 40) {
+        // adjust this value to increase or decrease the minimum distance between widgets
         return true;
       }
     }
@@ -661,13 +686,13 @@ class Circles1State extends State<Circles1> {
   }
 
   bool _isTouchingBoundary(double top, double right, Size containerSize) {
-    return top <= 0 || right <= 0 || top + 80 >= containerSize.height || right + 80 >= containerSize.width;
+    return top <= 0 ||
+        right <= 0 ||
+        top + 80 >= containerSize.height ||
+        right + 80 >= containerSize.width;
   }
-
-
-
-
 }
+
 class KeypadButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -676,39 +701,33 @@ class KeypadButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  LayoutBuilder(
+    return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final double scaleFactor = MediaQuery
-              .of(context)
-              .devicePixelRatio;
-          return GestureDetector(
-            onTap: onPressed,
-            child: Container(
-              // margin: EdgeInsets.all(1),
-              width: MediaQuery
-                  .of(context).size.width*0.052,
-              height: MediaQuery
-                  .of(context).size.width*0.052,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(MediaQuery
-                      .of(context).size.width*0.052/4,),
-                  // border: Border.all(width: 4, color: ColorManager.LightRed),
-                  color: ColorManager.LightRed
+      final double scaleFactor = MediaQuery.of(context).devicePixelRatio;
+      return GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          // margin: EdgeInsets.all(1),
+          width: MediaQuery.of(context).size.width * 0.052,
+          height: MediaQuery.of(context).size.width * 0.052,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                MediaQuery.of(context).size.width * 0.052 / 4,
               ),
-              child: Center(
-                child: Text(text, style: TextStyle(fontSize: MediaQuery
-                    .of(context).size.width*0.055/2.7,
+              // border: Border.all(width: 4, color: ColorManager.LightRed),
+              color: ColorManager.LightRed),
+          child: Center(
+            child: Text(text,
+                style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.055 / 2.7,
                     color: ColorManager.white,
-                    fontWeight: FontWeight.bold
-                )),
-              ),
-            ),
-          );
-        }
-    );
+                    fontWeight: FontWeight.bold)),
+          ),
+        ),
+      );
+    });
   }
 }
-
 
 class ActionButton extends StatelessWidget {
   final IconData icon;
@@ -720,11 +739,8 @@ class ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
-      width: MediaQuery
-          .of(context).size.width*0.053,
-      height: MediaQuery
-          .of(context).size.width*0.053,
+      width: MediaQuery.of(context).size.width * 0.053,
+      height: MediaQuery.of(context).size.width * 0.053,
       decoration: BoxDecoration(
         // border: Border.all(
         //   color: color , // Change border color
@@ -734,8 +750,11 @@ class ActionButton extends StatelessWidget {
         color: color,
       ),
       child: IconButton(
-        icon: Icon(icon, color: ColorManager.white, size: MediaQuery
-            .of(context).size.width* 0.052/2 ,),
+        icon: Icon(
+          icon,
+          color: ColorManager.white,
+          size: MediaQuery.of(context).size.width * 0.052 / 2,
+        ),
         onPressed: onPressed,
       ),
     );
@@ -752,33 +771,35 @@ class ExitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints)
-        {
-          return GestureDetector(
-            onTap: onPressed,
-            child: Container(
-
-              width: MediaQuery.of(context).size.width * 0.045,
-              height: MediaQuery.of(context).size.width * 0.045,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                // border: Border.all(
-                //   color: Colors.red.shade500 , // Change border color
-                //    // Change border width
-                // ),
-                color: color,
-              ),
-              child: Center(
-                child: IconButton(
-                  icon: Center(child: Icon(icon, color: Colors.white,size: MediaQuery.of(context).size.width * 0.025)),
-                  onPressed: onPressed,
-                ),
-              ),
+        builder: (BuildContext context, BoxConstraints constraints) {
+      return GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.045,
+          height: MediaQuery.of(context).size.width * 0.045,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            // border: Border.all(
+            //   color: Colors.red.shade500 , // Change border color
+            //    // Change border width
+            // ),
+            color: color,
+          ),
+          child: Center(
+            child: IconButton(
+              icon: Center(
+                  child: Icon(icon,
+                      color: Colors.white,
+                      size: MediaQuery.of(context).size.width * 0.025)),
+              onPressed: onPressed,
             ),
-          );
-        }
-    );}
+          ),
+        ),
+      );
+    });
+  }
 }
+
 class ButtonAnswer extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -788,52 +809,45 @@ class ButtonAnswer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints)
-        {
-
-
-          return GestureDetector(
-            onTap: onPressed,
-            child: Container(
-              // margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
-              width: MediaQuery.of(context).size.width * 0.080,
-              height: MediaQuery.of(context).size.width * 0.078,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: color,
-
-                ),
-                color:  color ,
-                borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.02),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 6,
-                    offset: const Offset(0, 2), // changes position of shadow
-                  ),
-                ],
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      return GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          // margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
+          width: MediaQuery.of(context).size.width * 0.080,
+          height: MediaQuery.of(context).size.width * 0.078,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: color,
+            ),
+            color: color,
+            borderRadius:
+                BorderRadius.circular(MediaQuery.of(context).size.width * 0.02),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 6,
+                offset: const Offset(0, 2), // changes position of shadow
               ),
-              child: Center(
-                child: Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.027,
-                    fontFamily: 'YourFontName',
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.normal,
-                    color:  ColorManager.white,
-                  ),
-                ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.width * 0.027,
+                fontFamily: 'YourFontName',
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.normal,
+                color: ColorManager.white,
               ),
             ),
-
-          );
-        }
-    );}
+          ),
+        ),
+      );
+    });
+  }
 }
-
-
-

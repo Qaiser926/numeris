@@ -17,6 +17,11 @@ import 'package:numeris/util/color_manager.dart';
 
 import 'package:numeris/util/result_message.dart';
 
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 
 import '../WelcomeUI.dart';
 import '../count/Q4.dart';
@@ -69,10 +74,26 @@ class AdditionState extends State<Addition> {
     super.initState();
     numberA=widget.number;
     startTimer();
+    initTts();
 
+  }
 
+   late FlutterTts flutterTts;
 
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
 
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
   }
   @override
   void dispose() {
@@ -193,6 +214,15 @@ class AdditionState extends State<Addition> {
         context: context,
         builder: (context) {
           return ResultMessage(
+               // text-to-speech
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Next_Question".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Next_Question'.tr,
             onTap: widget.number==10? j<=3 ? goToNextQuestion: navigate: widget.number==20? j<=4? goToNextQuestion: navigate:navigate,
             icon: Icons.arrow_forward,
@@ -206,6 +236,15 @@ class AdditionState extends State<Addition> {
         context: context,
         builder: (context) {
           return ResultMessage(
+                // text-to-speech
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Time_out!".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Time_out!'.tr,
             onTap: widget.number==10? j<=3 ? goToNextQuestion: navigate: widget.number==20? j<=4? goToNextQuestion: navigate:navigate,
             icon: Icons.arrow_forward,
@@ -385,20 +424,31 @@ class AdditionState extends State<Addition> {
                                         .height * 0.05,),
 
                                     Expanded(
-                                      child: Text(
-                                        "Solve".tr,
-                                        textAlign: TextAlign.center,
-                                        style:GoogleFonts.montserrat(textStyle: TextStyle(
-                                          fontSize:  MediaQuery
-                                              .of(context)
-                                              .size
-                                              .width * 0.032, // Change font size
-                                          // Change font family
-                                          fontWeight: FontWeight.bold, // Change font weight
-                                          fontStyle: FontStyle.normal, // Change font style
-                                          color: Colors.white, // Change text color
-                                        ),
-                                      ),),
+                                      child: GestureDetector(
+                                                       // text-to-speech
+            onTap:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Solve".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
+                                        child: Text(
+                                          "Solve".tr,
+                                          textAlign: TextAlign.center,
+                                          style:GoogleFonts.montserrat(textStyle: TextStyle(
+                                            fontSize:  MediaQuery
+                                                .of(context)
+                                                .size
+                                                .width * 0.032, // Change font size
+                                            // Change font family
+                                            fontWeight: FontWeight.bold, // Change font weight
+                                            fontStyle: FontStyle.normal, // Change font style
+                                            color: Colors.white, // Change text color
+                                          ),
+                                        ),),
+                                      ),
                                     ),
 
                                     // SizedBox(height:  MediaQuery

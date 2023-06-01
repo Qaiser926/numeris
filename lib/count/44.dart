@@ -19,6 +19,11 @@ import '../util/background-image1.dart';
 import '../util/views/countdown-page.dart';
 import '45.dart';
 
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 
 
 
@@ -54,9 +59,26 @@ class Q44State extends State<Q44> {
     // TODO: implement initState
     super.initState();
     controllerList[0].text='10,';
+    initTts();
 
 
+  }
+   late FlutterTts flutterTts;
 
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
   }
 
   Future<void> buttonTapped() async {
@@ -96,6 +118,15 @@ class Q44State extends State<Q44> {
         context: context,
         builder: (context) {
           return ResultMessage(
+                // text-to-speech
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Next_Question".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Next_Question'.tr,
             onTap: goToNextQuestion,
             icon: Icons.arrow_forward,

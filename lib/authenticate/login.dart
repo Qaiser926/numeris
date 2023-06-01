@@ -6,6 +6,11 @@ import 'package:numeris/authenticate/signup.dart';
 import 'package:numeris/util/background-image.dart';
 
 
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import '../WelcomeUI.dart';
 import '../util/color_manager.dart';
 import '../util/utilis.dart';
@@ -27,6 +32,33 @@ late String _email,_password;
   Utlils utilis=Utlils();
   bool loading= false;
  String hintPassword="******";
+   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initTts();
+  }
+
+ 
+  late FlutterTts flutterTts;
+
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     double screenHeight=  MediaQuery
@@ -92,15 +124,29 @@ late String _email,_password;
                                 Row(
                                   children: [
                                     SizedBox(width: screenWidth*0.03,),
-                                    Text(
-                                      'Welcome_Back'.tr,
-                                      overflow:TextOverflow.clip,
-                                      style: TextStyle(
-                                        
-                                      overflow:TextOverflow.ellipsis,
-                                        fontSize: screenWidth*0.033,
-                                        fontWeight: FontWeight.bold,
-                                        color: ColorManager.yellow,
+                                    GestureDetector(
+                                        onTap: () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(
+                                                      "add_interactive_exercises"
+                                                          .tr);
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
+                                      child: Text(
+                                        'Welcome_Back'.tr,
+                                        overflow:TextOverflow.clip,
+                                        style: TextStyle(
+                                          
+                                        overflow:TextOverflow.ellipsis,
+                                          fontSize: screenWidth*0.033,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorManager.yellow,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -110,12 +156,26 @@ late String _email,_password;
                                   children:  [
                                     SizedBox(width: screenWidth*0.07,),
                                     Center(
-                                      child: Text(
-                                        'Please_sign_in_to_continue.'.tr,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: screenWidth*0.0177,
-                                          color: Colors.white,
+                                      child: GestureDetector(
+                                          onTap: () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(
+                                                      "Please_sign_in_to_continue"
+                                                          .tr);
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
+                                        child: Text(
+                                          'Please_sign_in_to_continue.'.tr,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: screenWidth*0.0177,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -161,12 +221,27 @@ late String _email,_password;
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: screenHeight*0.055,),
-                                  Text(
-                                    'Sign_In'.tr,
-                                    style: TextStyle(
-                                      fontSize: screenWidth*0.0385,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                  GestureDetector(
+                                    // text-to-speech
+                                      onTap: () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(
+                                                      "Sign_In"
+                                                          .tr);
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
+                                    child: Text(
+                                      'Sign_In'.tr,
+                                      style: TextStyle(
+                                        fontSize: screenWidth*0.0385,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                   SizedBox(height: screenHeight*0.038),
@@ -180,10 +255,25 @@ late String _email,_password;
                                             mainAxisAlignment: MainAxisAlignment
                                                 .start,
                                             children: [
-                                              Text("Email".tr, style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: ColorManager.Yellow
-                                              ),),
+                                              GestureDetector(
+                                                  // text-to-speech
+                                      onTap: () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(
+                                                      "Email"
+                                                          .tr);
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
+                                                child: Text("Email".tr, style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: ColorManager.Yellow
+                                                ),),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -269,10 +359,25 @@ late String _email,_password;
                                             mainAxisAlignment: MainAxisAlignment
                                                 .start,
                                             children: [
-                                              Text("Password".tr, style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: ColorManager.Yellow
-                                              ),),
+                                              GestureDetector(
+                                                       // text-to-speech
+                                      onTap: () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(
+                                                      "Password"
+                                                          .tr);
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
+                                                child: Text("Password".tr, style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: ColorManager.Yellow
+                                                ),),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -399,12 +504,27 @@ late String _email,_password;
                                     children: [
                                       Expanded(child: SizedBox(width: screenWidth*0.025,)),
 
-                                       Text(
-                                        'Dont_have_an_account?'.tr,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
+                                       GestureDetector(
+                                               // text-to-speech
+                                      onTap: () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(
+                                                      "Dont_have_an_account"
+                                                          .tr);
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
+                                         child: Text(
+                                          'Dont_have_an_account?'.tr,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                                                             ),
+                                       ),
                                       GestureDetector(
                                         onTap: () {
                                           Navigator.push(

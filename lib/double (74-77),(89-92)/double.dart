@@ -4,6 +4,12 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -66,11 +72,25 @@ class DoubleAdditionSubtractionState extends State<DoubleAdditionSubtraction> {
     // TODO: implement initState
     super.initState();
     startTimer();
+    initTts();
+  }
 
+   late FlutterTts flutterTts;
 
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
 
+  initTts() {
+    flutterTts = FlutterTts();
 
-
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
   }
   @override
   void dispose() {
@@ -191,6 +211,14 @@ class DoubleAdditionSubtractionState extends State<DoubleAdditionSubtraction> {
         context: context,
         builder: (context) {
           return ResultMessage(
+            onClick: () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Next_Question".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Next_Question'.tr,
             onTap: goToNextQuestionAddition,
             icon: Icons.arrow_forward,
@@ -206,7 +234,15 @@ class DoubleAdditionSubtractionState extends State<DoubleAdditionSubtraction> {
         context: context,
         builder: (context) {
           return ResultMessage(
-            message: 'Time_out!',
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Time_out!".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
+            message: 'Time_out!'.tr,
             onTap: goToNextQuestionAddition,
             icon: Icons.arrow_forward,
           );
@@ -222,6 +258,14 @@ class DoubleAdditionSubtractionState extends State<DoubleAdditionSubtraction> {
         context: context,
         builder: (context) {
           return ResultMessage(
+            onClick:   () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak(widget.num==27 && i==3? 'Test Completed'.tr:'Next_Question'.tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: widget.num==27 && i==3? 'Test Completed'.tr:'Next_Question'.tr,
             onTap: i==3 ? navigate : goToNextQuestionSubtract,
             icon: Icons.arrow_forward,
@@ -236,6 +280,14 @@ class DoubleAdditionSubtractionState extends State<DoubleAdditionSubtraction> {
         context: context,
         builder: (context) {
           return ResultMessage(
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak(widget.num==27 && i==3? 'Test_Completed'.tr:'Time_out!'.tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: widget.num==27 && i==3? 'Test_Completed'.tr:'Time_out!'.tr,
             onTap: i==3 ? navigate : goToNextQuestionSubtract,
             icon: Icons.arrow_forward,
@@ -430,20 +482,30 @@ class DoubleAdditionSubtractionState extends State<DoubleAdditionSubtraction> {
                                         .height * 0.05,),
 
                                     Expanded(
-                                      child: Text(
-                                        "Solve",
-                                        textAlign: TextAlign.center,
-                                        style:GoogleFonts.montserrat(textStyle: TextStyle(
-                                          fontSize:  MediaQuery
-                                              .of(context)
-                                              .size
-                                              .width * 0.032, // Change font size
-                                          // Change font family
-                                          fontWeight: FontWeight.bold, // Change font weight
-                                          fontStyle: FontStyle.normal, // Change font style
-                                          color: Colors.white, // Change text color
-                                        ),
-                                        ),),
+                                      child: GestureDetector(
+                                        onTap:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Solve".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
+                                        child: Text(
+                                          "Solve".tr,
+                                          textAlign: TextAlign.center,
+                                          style:GoogleFonts.montserrat(textStyle: TextStyle(
+                                            fontSize:  MediaQuery
+                                                .of(context)
+                                                .size
+                                                .width * 0.032, // Change font size
+                                            // Change font family
+                                            fontWeight: FontWeight.bold, // Change font weight
+                                            fontStyle: FontStyle.normal, // Change font style
+                                            color: Colors.white, // Change text color
+                                          ),
+                                          ),),
+                                      ),
                                     ),
 
                                     // SizedBox(height:  MediaQuery

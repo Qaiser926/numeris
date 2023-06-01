@@ -1,7 +1,3 @@
-
-
-
-
 import 'dart:async';
 import 'dart:math';
 
@@ -18,60 +14,48 @@ import 'package:numeris/util/color_manager.dart';
 
 import 'package:numeris/util/result_message.dart';
 
-
 import '../WelcomeUI.dart';
 import '../count/Q4.dart';
 import '../subtraction(56-59,83-88)/Subtract.dart';
 import '../util/views/countdown-page.dart';
 import '../util/views/countdown-page1.dart';
 
-
-
-
-
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class HalfDouble extends StatefulWidget {
-
   final String childName;
 
-  const HalfDouble({super.key,required this.childName});
+  const HalfDouble({super.key, required this.childName});
 
   @override
   HalfDoubleState createState() => HalfDoubleState();
 }
 
 class HalfDoubleState extends State<HalfDouble> {
-
-
-
   String answer = '';
   Color _containerColor = ColorManager.button;
   bool check = true;
-  String value_double_of="What_is_the_double_of ".tr;
-  String value_half_of="What_is_the_half_of".tr;
+  String value_double_of = "What_is_the_double_of";
+  String value_half_of = "What_is_the_half_of";
   int targetIndex = 0;
   Color targetColor = ColorManager.offWhite;
   Timer? _timer;
 
   int i = 0;
-  int j=0;
+  int j = 0;
 
-
-  int numberA=3;
-  String userAnswer='?';
-
-
+  int numberA = 3;
+  String userAnswer = '?';
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     startTimer();
-
-
-
-
-
+    initTts();
   }
 
   @override
@@ -79,226 +63,246 @@ class HalfDoubleState extends State<HalfDouble> {
     // TODO: implement dispose
     super.dispose();
     _timer?.cancel();
-
-
   }
 
-  void navigate(){
+  void navigate() {
     Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) =>    DoubleAdditionSubtraction( childName: widget.childName, num: 30,)));
+        MaterialPageRoute(
+            builder: (context) => DoubleAdditionSubtraction(
+                  childName: widget.childName,
+                  num: 30,
+                )));
   }
+
   void startTimer() {
     // Cancel the existing timer if it's running
     _timer?.cancel();
     // Start a new timer
     _timer = Timer(const Duration(seconds: 40), () {
       // This callback will be called every 40 seconds
-      i<=5?checkResultMultiplyBy2T():checkResultDivideBy2T();
+      i <= 5 ? checkResultMultiplyBy2T() : checkResultDivideBy2T();
     });
   }
 
   Future<void> buttonTapped() async {
-
-
-    if(i<=5) {
-      setState(()  {
-
-
+    if (i <= 5) {
+      setState(() {
         checkResultMultiplyBy2();
       });
-        final FirebaseAuth auth = FirebaseAuth.instance;
-        final  currentUser = auth.currentUser;
-        final CollectionReference userCollection = FirebaseFirestore.instance.collection(currentUser!.email!);
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final currentUser = auth.currentUser;
+      final CollectionReference userCollection =
+          FirebaseFirestore.instance.collection(currentUser!.email!);
 
-          i == 0 && userAnswer == (numberA *2).toString()
-              ? await userCollection.doc(widget.childName).update({"Q60": "1"})
-              :
-          i == 0 && userAnswer != (numberA *2).toString()
+      i == 0 && userAnswer == (numberA * 2).toString()
+          ? await userCollection.doc(widget.childName).update({"Q60": "1"})
+          : i == 0 && userAnswer != (numberA * 2).toString()
               ? await userCollection.doc(widget.childName).update({"Q60": "0"})
-              :
-
-          i == 1 && userAnswer == (numberA *2).toString()
-              ? await userCollection.doc(widget.childName).update({"Q61": "1"})
-              :
-          i == 1 && userAnswer != (numberA *2).toString()
-              ? await userCollection.doc(widget.childName).update({"Q61": "0"})
-              :
-          i == 2 && userAnswer == (numberA *2).toString()
-              ? await userCollection.doc(widget.childName).update({"Q62": "1"})
-              :
-          i == 2 && userAnswer != (numberA *2).toString()
-              ? await userCollection.doc(widget.childName).update({"Q62": "0"})
-              :
-          i == 3 && userAnswer == (numberA *2).toString()
-              ? await userCollection.doc(widget.childName).update({"Q63": "1"})
-              :
-          i == 3 && userAnswer != (numberA *2).toString()
-              ? await userCollection.doc(widget.childName).update({"Q63": "0"})
-              :
-          i == 4 && userAnswer == (numberA *2).toString()
-              ? await userCollection.doc(widget.childName).update({"Q64": "1"})
-              :
-          i == 4 && userAnswer != (numberA *2).toString()
-              ? await userCollection.doc(widget.childName).update({"Q64": "0"})
-              :
-          i == 5 && userAnswer == (numberA *2).toString()
-              ? await userCollection.doc(widget.childName).update({"Q65": "1"})
-              :
-          i == 5 && userAnswer != (numberA *2).toString()
-              ? await userCollection.doc(widget.childName).update({"Q65": "0"})
-              :
-
-
-
-          null;
-
-
-
-
-
-
-    }
-    else if (i>=6){
-      setState(()  {
-
+              : i == 1 && userAnswer == (numberA * 2).toString()
+                  ? await userCollection
+                      .doc(widget.childName)
+                      .update({"Q61": "1"})
+                  : i == 1 && userAnswer != (numberA * 2).toString()
+                      ? await userCollection
+                          .doc(widget.childName)
+                          .update({"Q61": "0"})
+                      : i == 2 && userAnswer == (numberA * 2).toString()
+                          ? await userCollection
+                              .doc(widget.childName)
+                              .update({"Q62": "1"})
+                          : i == 2 && userAnswer != (numberA * 2).toString()
+                              ? await userCollection
+                                  .doc(widget.childName)
+                                  .update({"Q62": "0"})
+                              : i == 3 && userAnswer == (numberA * 2).toString()
+                                  ? await userCollection
+                                      .doc(widget.childName)
+                                      .update({"Q63": "1"})
+                                  : i == 3 &&
+                                          userAnswer != (numberA * 2).toString()
+                                      ? await userCollection
+                                          .doc(widget.childName)
+                                          .update({"Q63": "0"})
+                                      : i == 4 &&
+                                              userAnswer ==
+                                                  (numberA * 2).toString()
+                                          ? await userCollection
+                                              .doc(widget.childName)
+                                              .update({"Q64": "1"})
+                                          : i == 4 &&
+                                                  userAnswer !=
+                                                      (numberA * 2).toString()
+                                              ? await userCollection
+                                                  .doc(widget.childName)
+                                                  .update({"Q64": "0"})
+                                              : i == 5 &&
+                                                      userAnswer ==
+                                                          (numberA * 2)
+                                                              .toString()
+                                                  ? await userCollection
+                                                      .doc(widget.childName)
+                                                      .update({"Q65": "1"})
+                                                  : i == 5 &&
+                                                          userAnswer !=
+                                                              (numberA * 2)
+                                                                  .toString()
+                                                      ? await userCollection
+                                                          .doc(widget.childName)
+                                                          .update({"Q65": "0"})
+                                                      : null;
+    } else if (i >= 6) {
+      setState(() {
         checkResultDivideBy2();
       });
 
-        final FirebaseAuth auth = FirebaseAuth.instance;
-        final  currentUser = auth.currentUser;
-        final CollectionReference userCollection = FirebaseFirestore.instance.collection(currentUser!.email!);
-        // print((userAnswer).toString());
-        // print((numberA).toString());
-        // print((numberA ~/2).toString());
-        // print(i);
-        i == 6 && userAnswer == (numberA ~/2).toString()
-            ? await userCollection.doc(widget.childName).update({"Q66": "1"})
-            :
-        i == 6 && userAnswer != ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q66": "0"})
-            :
-
-        i == 7 && userAnswer == ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q67": "1"})
-            :
-        i == 7 && userAnswer != ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q67": "0"})
-            :
-        i == 8 && userAnswer == ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q68": "1"})
-            :
-        i == 8 && userAnswer != ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q68": "0"})
-            :
-        i == 9 && userAnswer == ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q69": "1"})
-            :
-        i == 9 && userAnswer != ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q69": "0"})
-            :
-        i == 10 && userAnswer == ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q70": "1"})
-            :
-        i == 10 && userAnswer != ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q70": "0"})
-            :
-        i == 11 && userAnswer == ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q71": "1"})
-            :
-        i == 11 && userAnswer != ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q71": "0"})
-            :
-        i == 12 && userAnswer == ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q72": "1"})
-            :
-        i == 12 && userAnswer != ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q72": "0"})
-            :
- i == 13 && userAnswer == ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q73": "1"})
-            :
-
-        i == 13 && userAnswer != ((numberA ~/2)).toString()
-            ? await userCollection.doc(widget.childName).update({"Q73": "0"})
-            :
-
-
-
-        null;
-
-
-
-
-
-
-
-
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final currentUser = auth.currentUser;
+      final CollectionReference userCollection =
+          FirebaseFirestore.instance.collection(currentUser!.email!);
+      // print((userAnswer).toString());
+      // print((numberA).toString());
+      // print((numberA ~/2).toString());
+      // print(i);
+      i == 6 && userAnswer == (numberA ~/ 2).toString()
+          ? await userCollection.doc(widget.childName).update({"Q66": "1"})
+          : i == 6 && userAnswer != ((numberA ~/ 2)).toString()
+              ? await userCollection.doc(widget.childName).update({"Q66": "0"})
+              : i == 7 && userAnswer == ((numberA ~/ 2)).toString()
+                  ? await userCollection
+                      .doc(widget.childName)
+                      .update({"Q67": "1"})
+                  : i == 7 && userAnswer != ((numberA ~/ 2)).toString()
+                      ? await userCollection
+                          .doc(widget.childName)
+                          .update({"Q67": "0"})
+                      : i == 8 && userAnswer == ((numberA ~/ 2)).toString()
+                          ? await userCollection
+                              .doc(widget.childName)
+                              .update({"Q68": "1"})
+                          : i == 8 && userAnswer != ((numberA ~/ 2)).toString()
+                              ? await userCollection
+                                  .doc(widget.childName)
+                                  .update({"Q68": "0"})
+                              : i == 9 &&
+                                      userAnswer == ((numberA ~/ 2)).toString()
+                                  ? await userCollection
+                                      .doc(widget.childName)
+                                      .update({"Q69": "1"})
+                                  : i == 9 &&
+                                          userAnswer !=
+                                              ((numberA ~/ 2)).toString()
+                                      ? await userCollection
+                                          .doc(widget.childName)
+                                          .update({"Q69": "0"})
+                                      : i == 10 &&
+                                              userAnswer ==
+                                                  ((numberA ~/ 2)).toString()
+                                          ? await userCollection
+                                              .doc(widget.childName)
+                                              .update({"Q70": "1"})
+                                          : i == 10 &&
+                                                  userAnswer !=
+                                                      ((numberA ~/ 2))
+                                                          .toString()
+                                              ? await userCollection
+                                                  .doc(widget.childName)
+                                                  .update({"Q70": "0"})
+                                              : i == 11 &&
+                                                      userAnswer ==
+                                                          ((numberA ~/ 2))
+                                                              .toString()
+                                                  ? await userCollection
+                                                      .doc(widget.childName)
+                                                      .update({"Q71": "1"})
+                                                  : i == 11 &&
+                                                          userAnswer !=
+                                                              ((numberA ~/ 2))
+                                                                  .toString()
+                                                      ? await userCollection.doc(widget.childName).update({"Q71": "0"})
+                                                      : i == 12 && userAnswer == ((numberA ~/ 2)).toString()
+                                                          ? await userCollection.doc(widget.childName).update({"Q72": "1"})
+                                                          : i == 12 && userAnswer != ((numberA ~/ 2)).toString()
+                                                              ? await userCollection.doc(widget.childName).update({"Q72": "0"})
+                                                              : i == 13 && userAnswer == ((numberA ~/ 2)).toString()
+                                                                  ? await userCollection.doc(widget.childName).update({"Q73": "1"})
+                                                                  : i == 13 && userAnswer != ((numberA ~/ 2)).toString()
+                                                                      ? await userCollection.doc(widget.childName).update({"Q73": "0"})
+                                                                      : null;
     }
   }
+
   // check if user is correct or not
   void checkResultMultiplyBy2() {
-
-
     showDialog(
         context: context,
         builder: (context) {
           return ResultMessage(
+            onClick: () async {
+              final isSave = box.read("isCheck");
+              if (isSave) {
+                await flutterTts.speak('Next_Question'.tr);
+              } else {
+                await flutterTts.setSilence(1);
+              }
+            },
             message: 'Next_Question'.tr,
             onTap: goToNextQuestionMultiply,
             icon: Icons.arrow_forward,
           );
         });
-
-
-
   }
+
   void checkResultDivideBy2() {
-
-
     showDialog(
         context: context,
         builder: (context) {
           return ResultMessage(
             message: 'Next_Question'.tr,
-            onTap: i==13 ? navigate : goToNextQuestionDivide,
+            onTap: i == 13 ? navigate : goToNextQuestionDivide,
             icon: Icons.arrow_forward,
           );
         });
-
-
-
   }
+
   void checkResultMultiplyBy2T() {
-
-
     showDialog(
         context: context,
         builder: (context) {
           return ResultMessage(
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak('Time_out!'.tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Time_out!'.tr,
             onTap: goToNextQuestionMultiply,
             icon: Icons.arrow_forward,
           );
         });
+  }
 
-
-
-  }void checkResultDivideBy2T() {
-
-
+  void checkResultDivideBy2T() {
     showDialog(
         context: context,
         builder: (context) {
           return ResultMessage(
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak('Time_out!'.tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Time_out!'.tr,
-            onTap: i==13 ? navigate : goToNextQuestionDivide,
+            onTap: i == 13 ? navigate : goToNextQuestionDivide,
             icon: Icons.arrow_forward,
           );
         });
-
-
-
   }
 
   // create random numbers
@@ -306,75 +310,76 @@ class HalfDoubleState extends State<HalfDouble> {
 
   // GO TO NEXT QUESTION
   void goToNextQuestionMultiply() {
-
     // dismiss alert dialog
 
     setState(() {
       startTimer();
-      userAnswer='?';
+      userAnswer = '?';
       i++;
     });
     Navigator.of(context).pop();
 
     // reset values
     // create a new question
-    numberA = randomNumber.nextInt(42)+3;
-    while(numberA%2!=0) {
-      numberA = randomNumber.nextInt(70)+8;
+    numberA = randomNumber.nextInt(42) + 3;
+    while (numberA % 2 != 0) {
+      numberA = randomNumber.nextInt(70) + 8;
     }
-
-
   }
+
   void goToNextQuestionDivide() {
-
     // dismiss alert dialog
 
     setState(() {
       startTimer();
 
-      userAnswer='?';
+      userAnswer = '?';
       i++;
     });
     Navigator.of(context).pop();
 
     // reset values
     // create a new question
-    numberA = randomNumber.nextInt(70)+8;
-    while(numberA%2!=0) {
-      numberA = randomNumber.nextInt(70)+8;
+    numberA = randomNumber.nextInt(70) + 8;
+    while (numberA % 2 != 0) {
+      numberA = randomNumber.nextInt(70) + 8;
     }
-
   }
 
+  late FlutterTts flutterTts;
 
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
 
+  initTts() {
+    flutterTts = FlutterTts();
 
-
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints)
-      {
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double scaleFactor = MediaQuery.of(context).devicePixelRatio;
 
-        final double scaleFactor = MediaQuery
-            .of(context)
-            .devicePixelRatio;
+        final double screenHeight = MediaQuery.of(context).size.height;
 
-        final double screenHeight=MediaQuery
-            .of(context)
-            .size
-            .height;
-
-        final double screenWidth=MediaQuery
-            .of(context)
-            .size
-            .width;
+        final double screenWidth = MediaQuery.of(context).size.width;
 
         return SafeArea(
           child: Stack(
             children: [
-              const BackgroundImage(imagePath: "assets/new.jpg",),
+              const BackgroundImage(
+                imagePath: "assets/new.jpg",
+              ),
               Scaffold(
                 backgroundColor: Colors.transparent,
                 body: Row(
@@ -382,9 +387,9 @@ class HalfDoubleState extends State<HalfDouble> {
                     Expanded(
                       flex: 1,
                       child: Padding(
-                        padding:  EdgeInsets.only(top: screenHeight*0.0025),
+                        padding: EdgeInsets.only(top: screenHeight * 0.0025),
                         child: SizedBox(
-                          width: screenWidth*0.003,
+                          width: screenWidth * 0.003,
                           // decoration: BoxDecoration(
                           //   border: Border.all(
                           //     color: ColorManager.green,
@@ -395,46 +400,48 @@ class HalfDoubleState extends State<HalfDouble> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: screenWidth*0.01,),
+                              SizedBox(
+                                height: screenWidth * 0.01,
+                              ),
                               Row(
                                 children: [
-                                  SizedBox(width: screenWidth*0.012,),
-                                  ExitButton(Icons.close_outlined, ColorManager.LightRed, onPressed:(){
+                                  SizedBox(
+                                    width: screenWidth * 0.012,
+                                  ),
+                                  ExitButton(Icons.close_outlined,
+                                      ColorManager.LightRed, onPressed: () {
                                     Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(builder: (context) => const Back(imagePath: 'assets/circleIndicator.json', path: Welcome(),)),
+                                      MaterialPageRoute(
+                                          builder: (context) => const Back(
+                                                imagePath:
+                                                    'assets/circleIndicator.json',
+                                                path: Welcome(),
+                                              )),
                                     );
                                   }),
-
                                 ],
                               ),
-
-
-
-
                             ],
                           ),
                         ),
                       ),
                     ),
                     Expanded(
-
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(height: screenHeight * 0.1),
+                        Row(
                           children: [
-                            SizedBox(height:screenHeight*0.1),
-
-
-                            Row(
-                              children: [
-                                 // CountdownPage1(path: DoubleAdditionSubtraction( childName: widget.childName, num: 30,),),
-                                SizedBox(width: screenWidth*0.01,)
-
-                              ],
-                            ),
-
+                            // CountdownPage1(path: DoubleAdditionSubtraction( childName: widget.childName, num: 30,),),
+                            SizedBox(
+                              width: screenWidth * 0.01,
+                            )
                           ],
-                        )),
+                        ),
+                      ],
+                    )),
                     // SizedBox(width:MediaQuery
                     //     .of(context)
                     //         .size.width*0.05),
@@ -448,14 +455,12 @@ class HalfDoubleState extends State<HalfDouble> {
                         //   ),
                         // ),
 
-
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            SizedBox(height: MediaQuery
-                                .of(context)
-                                .size
-                                .height * 0.05,),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.05,
+                            ),
                             Expanded(
                               flex: 4,
                               child: Container(
@@ -469,99 +474,121 @@ class HalfDoubleState extends State<HalfDouble> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    SizedBox(height: MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height * 0.04),
-
+                                    SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.04),
                                     Expanded(
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
-
                                           Expanded(
-                                            child: Text(
-                                              i<=5 ?  "$value_double_of $numberA?":  "$value_half_of $numberA?" ,
-                                              textAlign: TextAlign.center,
-                                              style:GoogleFonts.montserrat(textStyle: TextStyle(
-                                                fontSize:  MediaQuery
-                                                    .of(context)
-                                                    .size
-                                                    .width * 0.026, // Change font size
-                                                // Change font family
-                                                fontWeight: FontWeight.bold, // Change font weight
-                                                fontStyle: FontStyle.normal, // Change font style
-                                                color: Colors.white, // Change text color
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                final isSave =
+                                                    box.read("isCheck");
+                                                if (isSave) {
+                                                  await flutterTts.speak(i <= 5
+                                                      ? value_double_of.tr +
+                                                          " $numberA?"
+                                                      : value_half_of.tr +
+                                                          "$numberA?");
+                                                } else {
+                                                  await flutterTts
+                                                      .setSilence(1);
+                                                }
+                                              },
+                                              child: Text(
+                                                i <= 5
+                                                    ? value_double_of.tr +
+                                                        " $numberA?"
+                                                    : value_half_of.tr +
+                                                        "$numberA?",
+                                                textAlign: TextAlign.center,
+                                                style: GoogleFonts.montserrat(
+                                                  textStyle: TextStyle(
+                                                    fontSize: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width *
+                                                        0.026, // Change font size
+                                                    // Change font family
+                                                    fontWeight: FontWeight
+                                                        .bold, // Change font weight
+                                                    fontStyle: FontStyle
+                                                        .normal, // Change font style
+                                                    color: Colors
+                                                        .white, // Change text color
+                                                  ),
+                                                ),
                                               ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.04,
+                                    ),
+                                    Expanded(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width: screenWidth * 0.02,
+                                          ),
+                                          // question
+                                          Text(
+                                            i <= 5
+                                                ? (numberA).toString() +
+                                                    '   *  ' +
+                                                    ' 2  ' +
+                                                    ' =  '
+                                                : (numberA).toString() +
+                                                    '  / ' +
+                                                    ' 2  ' +
+                                                    ' =  ',
+                                            style: GoogleFonts.montserrat(
+                                              textStyle: TextStyle(
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.030, // Change font size
+                                                // Change font family
+                                                fontWeight: FontWeight
+                                                    .bold, // Change font weight
+                                                fontStyle: FontStyle
+                                                    .normal, // Change font style
+                                                color: Colors
+                                                    .white, // Change text color
                                               ),
                                             ),
                                           ),
 
+                                          // answer box
+                                          ButtonAnswer(userAnswer, () {},
+                                              _containerColor),
                                         ],
                                       ),
                                     ),
-
-                                    SizedBox(height:  MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height * 0.04,),
-                              Expanded(child:
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(width: screenWidth*0.02,),
-                                        // question
-                                        Text(
-                                          i <=5  ?  (numberA).toString() + '   *  '+ ' 2  ' + ' =  '  :  (numberA).toString() + '  / '  + ' 2  ' + ' =  ',
-                                          style:  GoogleFonts.montserrat(textStyle: TextStyle(
-                                            fontSize:  MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width * 0.030, // Change font size
-                                            // Change font family
-                                            fontWeight: FontWeight.bold, // Change font weight
-                                            fontStyle: FontStyle.normal, // Change font style
-                                            color: Colors.white, // Change text color
-                                          ),
-                                          ),
-                                        ),
-
-
-
-                                        // answer box
-                                        ButtonAnswer(
-                                            userAnswer,
-                                                () {},
-                                            _containerColor
-
-                                        ),
-
-                                      ],
-                                    ),
-                              ),
-                                    Expanded(
-                                        flex: 2,
-                                        child: SizedBox()),
+                                    Expanded(flex: 2, child: SizedBox()),
                                   ],
                                 ),
                               ),
                             ),
 
                             Container(
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height * 1.2,
-
+                              width: MediaQuery.of(context).size.height * 1.2,
                             ),
-
 
                             // SizedBox(height: MediaQuery
                             //     .of(context)
                             //     .size
                             //     .height * 0.002,),
-
-
                           ],
                         ),
                       ),
@@ -578,186 +605,174 @@ class HalfDoubleState extends State<HalfDouble> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-
-                                SizedBox(height: screenHeight*0.07,),
-
+                                SizedBox(
+                                  height: screenHeight * 0.07,
+                                ),
                                 Expanded(
                                   child: Container(
                                     // height:330,
 
-
-
                                     // margin: EdgeInsets.fromLTRB(0, 17, 10,0),
                                     // padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(MediaQuery
-                                .of(context).size.width*0.052/2.8),
-                            border: Border.all(width: MediaQuery
-                                .of(context).size.width*0.004, color:ColorManager.LightRed),
-                            color: Colors.transparent,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    KeypadButton('1', () {
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          MediaQuery.of(context).size.width *
+                                              0.052 /
+                                              2.8),
+                                      border: Border.all(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.004,
+                                          color: ColorManager.LightRed),
+                                      color: Colors.transparent,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            KeypadButton('1', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '1';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '1';
                                                 }
                                               });
                                             }),
                                             KeypadButton('2', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '2';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '2';
                                                 }
-
                                               });
                                             }),
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
                                             KeypadButton('3', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '3';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '3';
                                                 }
-
                                               });
                                             }),
                                             KeypadButton('4', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '4';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '4';
                                                 }
-
                                               });
                                             }),
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
                                             KeypadButton('5', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '5';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '5';
                                                 }
-
                                               });
                                             }),
                                             KeypadButton('6', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '6';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '6';
                                                 }
-
                                               });
                                             }),
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
                                             KeypadButton('7', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '7';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '7';
                                                 }
-
                                               });
                                             }),
                                             KeypadButton('8', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '8';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '8';
                                                 }
-
                                               });
                                             }),
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
                                             KeypadButton('9', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '9';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '9';
                                                 }
-
                                               });
                                             }),
                                             KeypadButton('0', () {
                                               setState(() {
-                                                if(userAnswer=='?'){
+                                                if (userAnswer == '?') {
                                                   userAnswer = '0';
-                                                }
-                                                else {
+                                                } else {
                                                   userAnswer += '0';
                                                 }
-
                                               });
                                             }),
                                           ],
                                         ),
                                         const SizedBox(height: 2),
                                         Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            ActionButton(Icons.arrow_back, ColorManager.maroon, onPressed: (){
+                                            ActionButton(Icons.arrow_back,
+                                                ColorManager.maroon,
+                                                onPressed: () {
                                               setState(() {
-                                                userAnswer='?';
+                                                userAnswer = '?';
                                               });
-                                            }
-
-
-                                            ),
-                                            ActionButton(Icons.check, ColorManager.lightGreen,onPressed: (){
+                                            }),
+                                            ActionButton(Icons.check,
+                                                ColorManager.lightGreen,
+                                                onPressed: () {
                                               // if(controllerList[i].text.toString()!='' && i<=3){
                                               setState(() {
                                                 buttonTapped();
-
                                               });
                                               // }
-
-
-
-
                                             }),
                                           ],
                                         ),
@@ -765,16 +780,18 @@ class HalfDoubleState extends State<HalfDouble> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: screenHeight*0.07,),
+                                SizedBox(
+                                  height: screenHeight * 0.07,
+                                ),
                               ],
                             ),
                           ),
-
                         ],
                       ),
                     ),
-                    SizedBox(width: screenWidth*0.05,),
-
+                    SizedBox(
+                      width: screenWidth * 0.05,
+                    ),
                   ],
                 ),
               ),
@@ -783,11 +800,9 @@ class HalfDoubleState extends State<HalfDouble> {
         );
       },
     );
-
   }
-
-
 }
+
 class KeypadButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -796,39 +811,33 @@ class KeypadButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  LayoutBuilder(
+    return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final double scaleFactor = MediaQuery
-              .of(context)
-              .devicePixelRatio;
-          return GestureDetector(
-            onTap: onPressed,
-            child: Container(
-              // margin: EdgeInsets.all(1),
-              width: MediaQuery
-                  .of(context).size.width*0.052,
-              height: MediaQuery
-                  .of(context).size.width*0.052,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(MediaQuery
-                      .of(context).size.width*0.052/4,),
-                  // border: Border.all(width: 4, color: ColorManager.LightRed),
-                  color: ColorManager.LightRed
+      final double scaleFactor = MediaQuery.of(context).devicePixelRatio;
+      return GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          // margin: EdgeInsets.all(1),
+          width: MediaQuery.of(context).size.width * 0.052,
+          height: MediaQuery.of(context).size.width * 0.052,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                MediaQuery.of(context).size.width * 0.052 / 4,
               ),
-              child: Center(
-                child: Text(text, style: TextStyle(fontSize: MediaQuery
-                    .of(context).size.width*0.055/2.7,
+              // border: Border.all(width: 4, color: ColorManager.LightRed),
+              color: ColorManager.LightRed),
+          child: Center(
+            child: Text(text,
+                style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.055 / 2.7,
                     color: ColorManager.white,
-                    fontWeight: FontWeight.bold
-                )),
-              ),
-            ),
-          );
-        }
-    );
+                    fontWeight: FontWeight.bold)),
+          ),
+        ),
+      );
+    });
   }
 }
-
 
 class ActionButton extends StatelessWidget {
   final IconData icon;
@@ -840,11 +849,8 @@ class ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
-      width: MediaQuery
-          .of(context).size.width*0.053,
-      height: MediaQuery
-          .of(context).size.width*0.053,
+      width: MediaQuery.of(context).size.width * 0.053,
+      height: MediaQuery.of(context).size.width * 0.053,
       decoration: BoxDecoration(
         // border: Border.all(
         //   color: color , // Change border color
@@ -854,8 +860,11 @@ class ActionButton extends StatelessWidget {
         color: color,
       ),
       child: IconButton(
-        icon: Icon(icon, color: ColorManager.white, size: MediaQuery
-            .of(context).size.width* 0.052/2 ,),
+        icon: Icon(
+          icon,
+          color: ColorManager.white,
+          size: MediaQuery.of(context).size.width * 0.052 / 2,
+        ),
         onPressed: onPressed,
       ),
     );
@@ -872,33 +881,35 @@ class ExitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints)
-        {
-          return GestureDetector(
-            onTap: onPressed,
-            child: Container(
-
-              width: MediaQuery.of(context).size.width * 0.045,
-              height: MediaQuery.of(context).size.width * 0.045,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                // border: Border.all(
-                //   color: Colors.red.shade500 , // Change border color
-                //    // Change border width
-                // ),
-                color: color,
-              ),
-              child: Center(
-                child: IconButton(
-                  icon: Center(child: Icon(icon, color: Colors.white,size: MediaQuery.of(context).size.width * 0.025)),
-                  onPressed: onPressed,
-                ),
-              ),
+        builder: (BuildContext context, BoxConstraints constraints) {
+      return GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.045,
+          height: MediaQuery.of(context).size.width * 0.045,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            // border: Border.all(
+            //   color: Colors.red.shade500 , // Change border color
+            //    // Change border width
+            // ),
+            color: color,
+          ),
+          child: Center(
+            child: IconButton(
+              icon: Center(
+                  child: Icon(icon,
+                      color: Colors.white,
+                      size: MediaQuery.of(context).size.width * 0.025)),
+              onPressed: onPressed,
             ),
-          );
-        }
-    );}
+          ),
+        ),
+      );
+    });
+  }
 }
+
 class ButtonAnswer extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -908,61 +919,53 @@ class ButtonAnswer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints)
-        {
-          final mediaQueryData = MediaQuery.of(context);
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      final mediaQueryData = MediaQuery.of(context);
 
+      final double scaleFactor = MediaQuery.of(context).devicePixelRatio;
 
-          final double scaleFactor = MediaQuery
-              .of(context)
-              .devicePixelRatio;
-
-          return GestureDetector(
-            onTap: onPressed,
-            child: Container(
-              // margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
-              width: MediaQuery.of(context).size.width * 0.098,
-              height: MediaQuery.of(context).size.width * 0.090,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: color,
-                  width: MediaQuery.of(context).size.width * 0.02,
-                ),
-                color:  color ,
-                borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.02),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 6,
-                    offset: const Offset(0, 2), // changes position of shadow
-                  ),
-                ],
+      return GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          // margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
+          width: MediaQuery.of(context).size.width * 0.098,
+          height: MediaQuery.of(context).size.width * 0.090,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: color,
+              width: MediaQuery.of(context).size.width * 0.02,
+            ),
+            color: color,
+            borderRadius:
+                BorderRadius.circular(MediaQuery.of(context).size.width * 0.02),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 6,
+                offset: const Offset(0, 2), // changes position of shadow
               ),
-              child: Center(
-                child: Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.montserrat(textStyle: TextStyle(
-                    fontSize:  MediaQuery
-                        .of(context)
-                        .size
-                        .width * 0.023, // Change font size
-                    // Change font family
-                    fontWeight: FontWeight.bold, // Change font weight
-                    fontStyle: FontStyle.normal, // Change font style
-                    color: Colors.white, // Change text color
-                  ),
-                  ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                textStyle: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width *
+                      0.023, // Change font size
+                  // Change font family
+                  fontWeight: FontWeight.bold, // Change font weight
+                  fontStyle: FontStyle.normal, // Change font style
+                  color: Colors.white, // Change text color
                 ),
               ),
             ),
-
-          );
-        }
-    );}
+          ),
+        ),
+      );
+    });
+  }
 }
-
-
-

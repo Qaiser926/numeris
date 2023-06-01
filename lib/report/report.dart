@@ -17,6 +17,11 @@ import 'package:numeris/util/name_message.dart';
 import 'package:numeris/util/result_message.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 
 
 class Report extends StatefulWidget {
@@ -42,6 +47,25 @@ class ReportState extends State<Report> {
     super.initState();
     _emailController.text="complete_the_diagnostic".tr;
     data();
+    initTts();
+  }
+  
+   late FlutterTts flutterTts;
+
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
   }
 
 
@@ -186,12 +210,23 @@ class ReportState extends State<Report> {
                                   Row(
                                     children: [
                                       SizedBox(width: screenWidth*0.03,),
-                                      Text("Report".tr,
-                                        style: TextStyle(
-                                            fontSize: screenWidth*0.027,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white
-                                        ),),
+                                      GestureDetector(
+                                            // text-to-speech
+            onTap:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Report".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
+                                        child: Text("Report".tr,
+                                          style: TextStyle(
+                                              fontSize: screenWidth*0.027,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white
+                                          ),),
+                                      ),
                                     ],
                                   ),
                                   Expanded(

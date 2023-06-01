@@ -2,14 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:numeris/WelcomeUI.dart';
 import 'package:numeris/count/Q3.dart';
 import '../result_message.dart';
 
-
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class CountdownPage extends StatefulWidget {
   final Widget path;
-   const CountdownPage({Key? key, required this.path}) : super(key: key);
+  const CountdownPage({Key? key, required this.path}) : super(key: key);
 
   @override
   CountdownPageState createState() => CountdownPageState();
@@ -30,47 +34,42 @@ class CountdownPageState extends State<CountdownPage>
 
   double progress = 1.0;
   void checkResult() {
-
     showDialog(
         barrierDismissible: false,
         context: context,
         builder: (context) {
           return ResultMessage(
+            onClick: () async {
+              final isSave = box.read("isCheck");
+              if (isSave) {
+                await flutterTts.speak("Time_out!".tr);
+              } else {
+                await flutterTts.setSilence(1);
+              }
+            },
             message: 'Time_out!'.tr,
             onTap: goToNextQuestion,
             icon: Icons.arrow_forward,
           );
         });
-
-
-
   }
-
-
 
   void goToNextQuestion() {
     // dismiss alert dialog
 
     Navigator.of(context).pop();
 
-
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) =>  widget.path));
-
-
+        context, MaterialPageRoute(builder: (context) => widget.path));
   }
-
 
   void notify() {
     if (countText == '0:00:00') {
       setState(() {
         checkResult();
-
       });
     }
   }
-
 
   @override
   void initState() {
@@ -78,11 +77,11 @@ class CountdownPageState extends State<CountdownPage>
     Future.delayed(const Duration(seconds: 40), () {
       checkResult();
     });
+    initTts();
     // controller = AnimationController(
     //   vsync: this,
     //   duration: const Duration(seconds: 40),
     // );
-
 
     // controller.addListener(() {
     //   notify();
@@ -102,6 +101,24 @@ class CountdownPageState extends State<CountdownPage>
     // setState(() {
     //   isPlaying = true;
     // });
+  }
+
+  late FlutterTts flutterTts;
+
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
   }
 
   @override
@@ -128,42 +145,41 @@ class CountdownPageState extends State<CountdownPage>
           //         .of(context).size.width*0.095/13.3,
           //   ),
           // ),
-    //       GestureDetector(
-    //         onTap: () {
-    //           if (controller.isDismissed) {
-    //             showModalBottomSheet(
-    //               context: context,
-    //               builder: (context) => Container(
-    //                 height: 100,
-    //                 child: CupertinoTimerPicker(
-    //                   initialTimerDuration: controller.duration!,
-    //                   onTimerDurationChanged: (time) {
-    //                     setState(() {
-    //                       controller.duration = time;
-    //                     });
-    //                   },
-    //                 ),
-    //               ),
-    //             );
-    //           }
-    //         },
-    // //         child: AnimatedBuilder(
-    // //           animation: controller,
-    // //           builder: (context, child) => const Text(
-    // //             ''
-    // // //             countText,
-    // // //
-    // // //             style:  GoogleFonts.montserrat(
-    // // // textStyle:TextStyle(
-    // // //               color: Colors.red,
-    // // //               fontSize: MediaQuery
-    // // //                   .of(context).size.width*0.095/6.7,
-    // // //               fontWeight: FontWeight.bold,
-    // // //             ),
-    // //             ),
-    // //           ),
-    //         ),
-
+          //       GestureDetector(
+          //         onTap: () {
+          //           if (controller.isDismissed) {
+          //             showModalBottomSheet(
+          //               context: context,
+          //               builder: (context) => Container(
+          //                 height: 100,
+          //                 child: CupertinoTimerPicker(
+          //                   initialTimerDuration: controller.duration!,
+          //                   onTimerDurationChanged: (time) {
+          //                     setState(() {
+          //                       controller.duration = time;
+          //                     });
+          //                   },
+          //                 ),
+          //               ),
+          //             );
+          //           }
+          //         },
+          // //         child: AnimatedBuilder(
+          // //           animation: controller,
+          // //           builder: (context, child) => const Text(
+          // //             ''
+          // // //             countText,
+          // // //
+          // // //             style:  GoogleFonts.montserrat(
+          // // // textStyle:TextStyle(
+          // // //               color: Colors.red,
+          // // //               fontSize: MediaQuery
+          // // //                   .of(context).size.width*0.095/6.7,
+          // // //               fontWeight: FontWeight.bold,
+          // // //             ),
+          // //             ),
+          // //           ),
+          //         ),
         ],
       ),
     );

@@ -21,6 +21,11 @@ import '../util/background-image1.dart';
 import '../util/views/countdown-page.dart';
 
 
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 
 
 
@@ -52,9 +57,27 @@ class Q18State extends State<Q18> {
     // TODO: implement initState
     super.initState();
     controllerList[0].text=',72';
+initTts();
 
 
+  }
+  
+   late FlutterTts flutterTts;
 
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
   }
 
   void buttonTapped() {
@@ -94,6 +117,15 @@ class Q18State extends State<Q18> {
         context: context,
         builder: (context) {
           return ResultMessage(
+                     // text-to-speech
+            onClick:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Next_Question".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
             message: 'Next_Question'.tr,
             onTap: goToNextQuestion,
             icon: Icons.arrow_forward,
@@ -224,20 +256,31 @@ class Q18State extends State<Q18> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
 
-                                    Text(
-                                      "Count_backwards_in_steps_of_two_from_72".tr,
-                                      textAlign: TextAlign.center,
-                                      style:
-                                      GoogleFonts.montserrat(
-                                        textStyle: TextStyle(
-                                          fontSize:  MediaQuery
-                                              .of(context)
-                                              .size
-                                              .width * 0.018, // Change font size
-                                          fontFamily: 'YourFontName', // Change font family
-                                          fontWeight: FontWeight.bold, // Change font weight
-                                          fontStyle: FontStyle.normal, // Change font style
-                                          color: ColorManager.white, // Change text color
+                                    GestureDetector(
+                                            // text-to-speech
+            onTap:  () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Count_backwards_in_steps_of_two_from_72".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
+                                      child: Text(
+                                        "Count_backwards_in_steps_of_two_from_72".tr,
+                                        textAlign: TextAlign.center,
+                                        style:
+                                        GoogleFonts.montserrat(
+                                          textStyle: TextStyle(
+                                            fontSize:  MediaQuery
+                                                .of(context)
+                                                .size
+                                                .width * 0.018, // Change font size
+                                            fontFamily: 'YourFontName', // Change font family
+                                            fontWeight: FontWeight.bold, // Change font weight
+                                            fontStyle: FontStyle.normal, // Change font style
+                                            color: ColorManager.white, // Change text color
+                                          ),
                                         ),
                                       ),
                                     ),

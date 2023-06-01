@@ -14,6 +14,11 @@ import '../../util/result_message.dart';
 import '../WelcomeUI.dart';
 import '../count/Q4.dart';
 
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 class Q20 extends StatefulWidget {
   final String childName;
   const Q20({super.key,required this.childName});
@@ -32,8 +37,31 @@ class Q20State extends State<Q20> {
   List<int> order=[];
   // final audioPlayer = AudioPlayer();
 
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initTts();
+  }
 
 
+   late FlutterTts flutterTts;
+
+  // TtsState ttsState = TtsState.stopped;
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      flutterTts.setInitHandler(() {
+        setState(() {
+          print("TTS Initialized");
+        });
+      });
+    }
+  }
 
 
 
@@ -103,6 +131,15 @@ class Q20State extends State<Q20> {
           context: context,
           builder: (context) {
             return ResultMessage(
+               // text-to-speech
+              onClick: () async {
+                final isSave = box.read("isCheck");
+                if (isSave) {
+                  await flutterTts.speak("Next_Question!".tr);
+                } else {
+                  await flutterTts.setSilence(1);
+                }
+              },
               message: 'Next_Question!'.tr,
               onTap: goToNextQuestion,
               icon: Icons.arrow_forward,
