@@ -108,7 +108,7 @@ class BeforeAfterState extends State<BeforeAfter> {
     // Cancel the existing timer if it's running
     _timer?.cancel();
     // Start a new timer
-    _timer = Timer(const Duration(seconds: 40), (){
+    _timer = Timer(const Duration(seconds: 20), (){
       // This callback will be called every 40 seconds
       checkResult1();
     });

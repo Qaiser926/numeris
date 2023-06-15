@@ -57,12 +57,14 @@ class WelcomeState extends State<Welcome> {
 // Function to update the items list with the new value entered by the user
   void _updateDropdownItems(String newValue) {
     if (_dropdownItems.contains(newValue)) {
-      // Add the new value to the list
+   
+      setState(() {
+           // Add the new value to the list
       _dropdownItems.add(newValue);
       // Set the dropdown value to the new value
       dropdownValue = newValue;
       // Update the state to rebuild the UI
-      setState(() {});
+      });
     }
   }
 
@@ -110,7 +112,7 @@ class WelcomeState extends State<Welcome> {
   }
 
 
-  var checkboxValue = false;
+  bool checkboxValue = false;
 
   @override
   Widget build(BuildContext context) {
@@ -737,13 +739,17 @@ class WelcomeState extends State<Welcome> {
                   ),
                   Expanded(
                       child: CheckboxListTile(
-                    title: Text('My Checkbox'),
+                        
+                    title:const Text('Text-to-speech'),
                     value: box.read("isCheck"),
                     onChanged: (value) {
                       setState(() {
-                        Navigator.pop(context);
+                       
+                         box.write("isCheck", checkboxValue);
+                         
                         checkboxValue = value!;
-                        box.write("isCheck", checkboxValue);
+                         Navigator.pop(context);
+                       
                       });
                     },
                   ))
@@ -832,7 +838,7 @@ class WelcomeState extends State<Welcome> {
         //       });
         // });
       },
-      // onSubmitted: _updateDropdownItems,
+      onSubmitted: _updateDropdownItems,
       readOnly: false,
       controller: selectChildController,
       style: TextStyle(
